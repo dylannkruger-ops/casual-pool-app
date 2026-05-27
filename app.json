@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Casual Pool",
+    "slug": "casual-pool",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "casualpool",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F4F1EC"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.casualpool.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Casual Pool uses your location to show shifts and workers nearby.",
+        "NSCameraUsageDescription": "Casual Pool uses your camera so you can upload a profile photo and verification documents.",
+        "NSPhotoLibraryUsageDescription": "Casual Pool needs photo library access so you can upload a profile photo and documents."
+      }
+    },
+    "android": {
+      "package": "com.casualpool.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#F4F1EC"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Casual Pool to use your location to find nearby shifts and workers."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
