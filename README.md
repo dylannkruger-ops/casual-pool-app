@@ -1,143 +1,102 @@
-# Casual Pool
+# Underlay
 
-> Australia's casual workforce, on tap.
+> Premium website layers — with the prompt and assets included.
 
-A two-sided staffing marketplace built with **Expo + React Native + TypeScript**. Businesses post shifts, workers apply, both sides pay a flat **$4.99** platform fee per hired shift.
+Underlay is a digital product library. Creators browse premium website/UI
+"layers" (templates, 3D scenes, backgrounds, sections), preview them live, and
+unlock the full build prompts + bundled assets via subscription. Free items are
+the bait, premium items are gated, and new drops land every Friday.
 
-This repo contains the **mobile app scaffold** (iOS-first, also runs on Android and web).
+Built with **Next.js 15 (App Router) · TypeScript · Tailwind CSS v4 · Supabase
+· Stripe**, deployed on **Vercel**.
 
----
-
-## What's in the box
-
-- **Expo Router** app with grouped routes: `(auth)`, `(onboarding)`, `(tabs)`
-- **Design system** — warm neutral background, premium dark feature panels, teal accents
-- Auth: role selection, sign-up, sign-in, forgot password (mocked)
-- Worker onboarding (4 steps): basics, skills & rate, availability, documents
-- Business onboarding (3 steps): company details, ABN verification, payment setup
-- Marketplace: shift list + worker directory + map placeholder
-- Shift detail, applicants, shortlist, hire
-- Post-a-shift flow (ABN-gated)
-- Messaging (thread list + chat)
-- Calendar with weekly view
-- Dashboards (worker + business, week/month/year)
-- Profile screens for both roles
-- Zustand state stores with seeded mock data
-- Mock ABN verifier and permissions gate
-- Database schema in `docs/SCHEMA.md`
-- Admin panel plan in `docs/ADMIN_PANEL.md`
-- Investor-quality product brief in `docs/PRODUCT_BRIEF.md`
-- Replit Agent 4 continuation prompt in `docs/REPLIT_AGENT_PROMPT.md`
+> **Note:** this repository previously held an unrelated Expo/React Native app
+> ("Casual Pool"). That scaffold has been replaced at the root by Underlay; its
+> history remains in git.
 
 ---
 
-## Quick start
+## Design system
 
-### 1. Install dependencies
+- Dark base (`#050608` family, never pure black) with a single luminous accent:
+  **signal cyan `#4FE3E8`**.
+- **Glassmorphism** is the core language — dark-tinted frosted panels, hairline
+  accent borders, inner top highlight, soft deep shadows. Something luminous
+  always lives behind the blur.
+- Display face: **Clash Display**. Body: **Inter**. Labels/metadata:
+  **JetBrains Mono**.
+- Pill-shaped controls, film grain overlay site-wide, `prefers-reduced-motion`
+  respected globally.
+- Homepage signature: **kinetic type** — a giant ghosted wordmark behind the
+  hero glass that responds to pointer and scroll.
+- All design tokens live in [`src/lib/tokens.ts`](src/lib/tokens.ts), mirrored
+  into the Tailwind v4 theme in [`src/app/globals.css`](src/app/globals.css).
+  No scattered hex values.
+
+---
+
+## Getting started
 
 ```bash
 npm install
+cp .env.example .env.local   # fill in values as blocks are wired up
+npm run dev                  # http://localhost:3000
 ```
 
-> Node 18+ recommended. The project pins Expo SDK 51.
-
-### 2. Run the app
+Other scripts:
 
 ```bash
-npm run ios       # iOS simulator
-npm run android   # Android emulator
-npm run web       # browser
-npm run start     # Expo Dev Tools
+npm run build       # production build
+npm run typecheck   # tsc --noEmit
+npm run lint        # next lint
 ```
 
-### 3. Demo login
-
-From the landing screen, tap **Sign in**, then either:
-- **Sign in as Worker (demo)** — preloads Amelia Chen's profile
-- **Sign in as Business (demo)** — preloads Bowery & Vine's profile
-
-You can also tap **Create an account** to walk through the real onboarding flow.
+Environment variables are documented in [`.env.example`](.env.example).
+Supabase, Stripe, and admin config land in their respective build blocks.
 
 ---
 
 ## Project structure
 
 ```
-casual-pool/
-├── app/                       # Expo Router pages
-│   ├── _layout.tsx
-│   ├── index.tsx              # Landing
-│   ├── dashboard.tsx          # Worker/business dashboard
-│   ├── (auth)/                # Sign-up, sign-in, forgot password, role
-│   ├── (onboarding)/          # Worker + business onboarding flows
-│   ├── (tabs)/                # Home, Discover, Calendar, Messages, Profile
-│   ├── shift/                 # [id].tsx, new.tsx
-│   ├── worker/                # [id].tsx
-│   └── messages/              # [threadId].tsx
-├── components/
-│   └── ui/                    # Design-system primitives (Button, Card, Input, …)
-├── constants/
-│   └── theme.ts               # Colors, type, spacing, radius, shadows
-├── hooks/                     # (add custom hooks here)
-├── lib/
-│   ├── abn.ts                 # ABN format + mock verifier
-│   ├── format.ts              # Date / currency helpers
-│   ├── mockData.ts            # Seeded workers, businesses, shifts, messages
-│   └── permissions.ts         # ABN/payment gate
-├── stores/                    # Zustand stores: auth, profile, shifts, messaging
-├── types/                     # Domain types matching the Postgres schema
-├── docs/
-│   ├── SCHEMA.md
-│   ├── ADMIN_PANEL.md
-│   ├── PRODUCT_BRIEF.md
-│   └── REPLIT_AGENT_PROMPT.md
-├── app.json
-├── babel.config.js
-├── tsconfig.json
-└── package.json
+src/
+  app/
+    layout.tsx         # fonts, backdrop, film grain, metadata
+    globals.css        # Tailwind v4 theme (mirrors tokens.ts) + glass utilities
+    page.tsx           # home (foundations showcase in Block 1)
+  components/
+    Backdrop.tsx       # the luminous layer behind all glass
+    FilmGrain.tsx      # site-wide grain overlay
+    KineticType.tsx    # homepage signature element
+    glass/
+      GlassPanel.tsx   # base frosted surface
+      Pill.tsx         # button/link pill (primary/secondary/ghost, all states)
+      Chip.tsx         # metadata + filter chip
+      Nav.tsx          # glass pill nav
+  lib/
+    tokens.ts          # design tokens — single source of truth
+    utils.ts           # cn() class merge helper
 ```
 
 ---
 
-## Environment
+## Build progress
 
-Copy `.env.example` to `.env` and fill in when you wire backends. Nothing in this scaffold requires real keys — the mock data and mock ABN verifier work out of the box.
+Delivered one block at a time.
 
-```
-EXPO_PUBLIC_SUPABASE_URL=
-EXPO_PUBLIC_SUPABASE_ANON_KEY=
-EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=
-STRIPE_SECRET_KEY=
-ABR_GUID=
-EXPO_PUBLIC_GOOGLE_MAPS_KEY=
-```
+- [x] **Block 1** — Scaffold, design tokens, glass primitives, kickoff picks.
+- [ ] **Block 2** — Supabase schema + RLS + auth.
+- [ ] **Block 3** — Library home (grid, filters, cards) + seed items.
+- [ ] **Block 4** — Item detail + gating API routes.
+- [ ] **Block 5** — Stripe checkout + webhooks + account.
+- [ ] **Block 6** — Admin + storage uploads.
+- [ ] **Block 7** — Pricing + legal + quality-floor polish.
 
----
+### Kickoff decisions (locked)
 
-## Design language
-
-- **Background** `#F4F1EC` warm neutral
-- **Surfaces** white cards with 16–20px radius and very soft shadow
-- **Feature panels** charcoal `#171717` with cream text
-- **Accent** teal/green `#0F7B6C`
-- **Type** system stack (SF Pro on iOS, Roboto on Android); 700 for headings, 500 for emphasis
-- **Spacing** 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 56
-
-Do not restyle the design system without intent — it's tuned to feel like a premium native iOS product, not a generic React Native template.
-
----
-
-## Continuing development
-
-Open `docs/REPLIT_AGENT_PROMPT.md` and paste it into a fresh Replit Agent 4 session after importing the repo. The prompt explains:
-
-- What's already built
-- What to build next (Supabase, Stripe, live ABN, push, map, reviews, admin)
-- Rules to follow (design lock, type everything, server-enforce gates)
-- A clear "definition of done" for the next pass
-
----
-
-## License
-
-Proprietary — © 2026 Casual Pool. All rights reserved.
+| Decision  | Choice                                            |
+| --------- | ------------------------------------------------- |
+| Brand     | **Underlay**                                      |
+| Accent    | **Signal cyan `#4FE3E8`**                         |
+| Display   | **Clash Display**                                 |
+| Signature | **Kinetic type** behind the hero                  |
