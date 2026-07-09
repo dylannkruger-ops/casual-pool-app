@@ -17,7 +17,7 @@ export default function Home() {
 
       {/* Hero — kinetic type behind, one line of positioning over glass. */}
       <section className="relative mx-auto flex min-h-[72vh] max-w-6xl flex-col items-center justify-center px-4 pt-24 text-center">
-        <KineticType word="underlay" className="top-10 opacity-90" />
+        <KineticType word="lucen" className="top-10 opacity-90" />
 
         <div className="relative z-10 flex flex-col items-center gap-6">
           <Chip tone="accent">

@@ -22,18 +22,18 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: {
-    default: "Underlay — premium website layers, prompt + assets included",
-    template: "%s · Underlay",
+    default: "Lucen — premium website layers, prompt + assets included",
+    template: "%s · Lucen",
   },
   description:
     "Browse premium website and UI layers, preview them live, then unlock the full build prompts and bundled assets. New drops every Friday.",
-  applicationName: "Underlay",
+  applicationName: "Lucen",
   openGraph: {
-    title: "Underlay — premium website layers, prompt + assets included",
+    title: "Lucen — premium website layers, prompt + assets included",
     description:
       "Browse premium website and UI layers, preview them live, then unlock the full build prompts and bundled assets.",
     type: "website",
-    siteName: "Underlay",
+    siteName: "Lucen",
   },
   twitter: { card: "summary_large_image" },
 };

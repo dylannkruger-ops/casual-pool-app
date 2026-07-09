@@ -1,8 +1,8 @@
-# Underlay
+# Lucen
 
 > Premium website layers — with the prompt and assets included.
 
-Underlay is a digital product library. Creators browse premium website/UI
+Lucen is a digital product library. Creators browse premium website/UI
 "layers" (templates, 3D scenes, backgrounds, sections), preview them live, and
 unlock the full build prompts + bundled assets via subscription. Free items are
 the bait, premium items are gated, and new drops land every Friday.
@@ -92,7 +92,7 @@ Delivered one block at a time.
 
 | Decision  | Choice                                            |
 | --------- | ------------------------------------------------- |
-| Brand     | **Underlay**                                      |
+| Brand     | **Lucen** (lucen.ai)                              |
 | Accent    | **Signal cyan `#4FE3E8`**                         |
 | Display   | **Clash Display**                                 |
 | Signature | **Kinetic type** behind the hero                  |

@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
  * skipping the pointer listeners entirely.
  */
 export function KineticType({
-  word = "underlay",
+  word = "lucen",
   className,
 }: {
   word?: string;

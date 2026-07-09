@@ -1,5 +1,5 @@
 /**
- * Underlay design tokens — the single source of truth.
+ * Lucen design tokens — the single source of truth.
  *
  * These values are mirrored into the Tailwind v4 theme via CSS custom
  * properties in `src/app/globals.css` (the `@theme` block reads the same

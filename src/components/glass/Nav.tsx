@@ -13,20 +13,20 @@ const CATEGORIES = [
   { label: "Sections", value: "section" },
 ] as const;
 
-/** Underlay wordmark — set in the display face, accent dot as the "under" glow. */
+/** Lucen wordmark — set in the display face, accent dot as the luminous glow. */
 function Wordmark() {
   return (
     <Link
       href="/"
       className="group inline-flex items-center gap-2 rounded-pill px-1 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
-      aria-label="Underlay home"
+      aria-label="Lucen home"
     >
       <span
         aria-hidden
         className="size-2 rounded-full bg-accent shadow-[0_0_10px_2px_rgba(79,227,232,0.6)] transition-transform duration-200 group-hover:scale-125"
       />
       <span className="font-display text-lg font-semibold tracking-tight text-bone">
-        underlay
+        lucen
       </span>
     </Link>
   );

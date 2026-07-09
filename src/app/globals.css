@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ *
- * Underlay theme — mirrors src/lib/tokens.ts.                          *
+ * Lucen theme — mirrors src/lib/tokens.ts.                             *
  * Tailwind v4 reads these custom properties to generate utilities      *
  * (bg-base, text-bone, font-display, rounded-pill, etc.).              *
  * ------------------------------------------------------------------ */
