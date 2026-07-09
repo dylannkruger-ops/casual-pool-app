@@ -1,0 +1,83 @@
+{
+  "name": "pool_table",
+  "description": "A stylised pool table: green felt bed, wooden rails, four legs.",
+  "nodes": [
+    {
+      "name": "felt",
+      "primitive": "box",
+      "params": { "size": [2.0, 0.1, 4.0] },
+      "translation": [0, 1.0, 0],
+      "color": [0.05, 0.42, 0.24, 1.0],
+      "metallic": 0.0,
+      "roughness": 0.95
+    },
+    {
+      "name": "rail_long_left",
+      "primitive": "box",
+      "params": { "size": [0.2, 0.22, 4.2] },
+      "translation": [-1.05, 1.06, 0],
+      "color": [0.35, 0.18, 0.08, 1.0],
+      "metallic": 0.05,
+      "roughness": 0.6
+    },
+    {
+      "name": "rail_long_right",
+      "primitive": "box",
+      "params": { "size": [0.2, 0.22, 4.2] },
+      "translation": [1.05, 1.06, 0],
+      "color": [0.35, 0.18, 0.08, 1.0],
+      "metallic": 0.05,
+      "roughness": 0.6
+    },
+    {
+      "name": "rail_short_top",
+      "primitive": "box",
+      "params": { "size": [2.3, 0.22, 0.2] },
+      "translation": [0, 1.06, -2.1],
+      "color": [0.35, 0.18, 0.08, 1.0],
+      "metallic": 0.05,
+      "roughness": 0.6
+    },
+    {
+      "name": "rail_short_bottom",
+      "primitive": "box",
+      "params": { "size": [2.3, 0.22, 0.2] },
+      "translation": [0, 1.06, 2.1],
+      "color": [0.35, 0.18, 0.08, 1.0],
+      "metallic": 0.05,
+      "roughness": 0.6
+    },
+    {
+      "name": "leg_fl",
+      "primitive": "cylinder",
+      "params": { "radius": 0.12, "height": 1.0, "segments": 20 },
+      "translation": [-0.8, 0.5, -1.7],
+      "color": [0.28, 0.14, 0.06, 1.0],
+      "roughness": 0.7
+    },
+    {
+      "name": "leg_fr",
+      "primitive": "cylinder",
+      "params": { "radius": 0.12, "height": 1.0, "segments": 20 },
+      "translation": [0.8, 0.5, -1.7],
+      "color": [0.28, 0.14, 0.06, 1.0],
+      "roughness": 0.7
+    },
+    {
+      "name": "leg_bl",
+      "primitive": "cylinder",
+      "params": { "radius": 0.12, "height": 1.0, "segments": 20 },
+      "translation": [-0.8, 0.5, 1.7],
+      "color": [0.28, 0.14, 0.06, 1.0],
+      "roughness": 0.7
+    },
+    {
+      "name": "leg_br",
+      "primitive": "cylinder",
+      "params": { "radius": 0.12, "height": 1.0, "segments": 20 },
+      "translation": [0.8, 0.5, 1.7],
+      "color": [0.28, 0.14, 0.06, 1.0],
+      "roughness": 0.7
+    }
+  ]
+}
