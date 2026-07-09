@@ -1,4 +1,4 @@
-# Casual Pool — Database Schema
+# Lucen AI — Database Schema
 
 Target: **Postgres + Supabase** (recommended). Drop-in compatible with Prisma.
 

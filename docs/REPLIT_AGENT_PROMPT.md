@@ -6,7 +6,7 @@ Paste the prompt below into a fresh Replit Agent 4 session after importing this 
 
 ## Prompt
 
-You are continuing development of **Casual Pool**, an Expo React Native + TypeScript app already scaffolded in this repo. It is a two-sided staffing marketplace where Australian businesses hire casual workers and workers find shifts. The business is charged a **flat $4.99 platform fee on hire**; the worker is charged **$4.99 on accepting a hired shift**. Read `README.md`, `docs/PRODUCT_BRIEF.md`, and `docs/SCHEMA.md` first.
+You are continuing development of **Lucen AI**, an Expo React Native + TypeScript app already scaffolded in this repo. It is a two-sided staffing marketplace where Australian businesses hire casual workers and workers find shifts. The business is charged a **flat $4.99 platform fee on hire**; the worker is charged **$4.99 on accepting a hired shift**. Read `README.md`, `docs/PRODUCT_BRIEF.md`, and `docs/SCHEMA.md` first.
 
 ### What's already built
 - Expo Router app with `(auth)`, `(onboarding)`, `(tabs)` groups

@@ -1,5 +1,5 @@
 /**
- * Casual Pool — Design System
+ * Lucen AI — Design System
  *
  * Warm, premium, iOS-native feel.
  * Light neutral background, white cards, dark feature panels,

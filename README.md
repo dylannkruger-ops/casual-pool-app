@@ -1,4 +1,4 @@
-# Casual Pool
+# Lucen AI
 
 > Australia's casual workforce, on tap.
 
@@ -63,7 +63,7 @@ You can also tap **Create an account** to walk through the real onboarding flow.
 ## Project structure
 
 ```
-casual-pool/
+lucen-ai/
 ├── app/                       # Expo Router pages
 │   ├── _layout.tsx
 │   ├── index.tsx              # Landing
@@ -140,4 +140,4 @@ Open `docs/REPLIT_AGENT_PROMPT.md` and paste it into a fresh Replit Agent 4 sess
 
 ## License
 
-Proprietary — © 2026 Casual Pool. All rights reserved.
+Proprietary — © 2026 Lucen AI. All rights reserved.

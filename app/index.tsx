@@ -12,7 +12,7 @@ export default function Landing() {
     <Screen background="default" padded>
       <View style={styles.brandRow}>
         <View style={styles.logoDot} />
-        <Text variant="h3">Casual Pool</Text>
+        <Text variant="h3">Lucen AI</Text>
       </View>
 
       <View style={{ height: spacing['3xl'] }} />

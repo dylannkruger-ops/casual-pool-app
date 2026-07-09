@@ -8,7 +8,7 @@ import { spacing } from '@/constants/theme';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const [email, setEmail] = useState('demo@casualpool.app');
+  const [email, setEmail] = useState('demo@lucenai.app');
   const [password, setPassword] = useState('demo1234');
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
