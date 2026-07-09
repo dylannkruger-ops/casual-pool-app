@@ -19,7 +19,7 @@ export default function RoleScreen() {
 
   return (
     <Screen padded>
-      <Header back title="Join Casual Pool" subtitle="How will you use the app?" />
+      <Header back title="Join Lucen AI" subtitle="How will you use the app?" />
       <View style={{ height: spacing.lg }} />
 
       <RoleCard

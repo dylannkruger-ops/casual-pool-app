@@ -1,4 +1,4 @@
-# Casual Pool — Product Brief
+# Lucen AI — Product Brief
 
 > Australia's casual workforce, on tap.
 
@@ -56,7 +56,7 @@ A premium mobile-first marketplace with:
 ## 7. Defensibility
 
 - **Verified supply** — verified workers + ABN-verified businesses compound trust.
-- **Repeat-employer graph** — Casual Pool learns who hires who, so we can surface "your roster" suggestions agencies can't.
+- **Repeat-employer graph** — Lucen AI learns who hires who, so we can surface "your roster" suggestions agencies can't.
 - **Pricing transparency** — flat fee is hard to undercut without losing margin.
 
 ## 8. Roadmap (12 months)
@@ -73,7 +73,7 @@ A premium mobile-first marketplace with:
 - **Liquidity in a new postcode.** → Hand-recruit supply first; offer fee-free month to anchor demand.
 - **Worker no-shows.** → Reputation system + 24-hour cancellation rule + cancellation fees.
 - **Off-platform leakage.** → Messaging unlocked only after hire; smart blocking of phone/email patterns in chat until hired.
-- **Regulatory.** → Casual Pool is a marketplace, not an employer. Workers are direct hires by businesses. Standard Australian Fair Work / workplace laws apply.
+- **Regulatory.** → Lucen AI is a marketplace, not an employer. Workers are direct hires by businesses. Standard Australian Fair Work / workplace laws apply.
 
 ## 10. KPIs
 

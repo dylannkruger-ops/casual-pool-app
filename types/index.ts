@@ -1,5 +1,5 @@
 /**
- * Casual Pool — Domain Types
+ * Lucen AI — Domain Types
  *
  * These shapes mirror the Postgres schema in /docs/SCHEMA.md.
  * Keep them in sync when wiring Supabase or Prisma.

@@ -1,6 +1,6 @@
 {
   "name": "map_pin",
-  "description": "A teardrop location pin (cone + sphere) in the Casual Pool teal accent.",
+  "description": "A teardrop location pin (cone + sphere) in the Lucen AI teal accent.",
   "nodes": [
     {
       "name": "pin_body",
