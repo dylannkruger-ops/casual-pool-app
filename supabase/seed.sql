@@ -54,6 +54,14 @@ on conflict (id) do update set
   is_new = excluded.is_new, drop_week = excluded.drop_week,
   sort_order = excluded.sort_order, published = excluded.published;
 
+-- Point preview media + live demo at the bundled files in /public (served by
+-- the app on your deployed domain). Replace with uploaded media via /admin.
+update public.items set
+  preview_image_url = '/previews/' || slug || '.jpg',
+  preview_video_url = '/previews/' || slug || '.webm',
+  live_demo_url     = '/demos/' || slug || '.html'
+where slug in ('meridian','halcyon','obsidian-studio','starfield','vellichor','cascade');
+
 -- Starter secrets. Expand prompt_text to the full 800+ word prompts via /admin.
 insert into public.item_secrets (item_id, prompt_text, iteration_notes, asset_bundle_path)
 values

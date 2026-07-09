@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Starfield — Particle Hero Scene</title>
+<style>
+  :root{
+    --cyan: #4FE3E8;
+    --cyan-soft: #7DEEF1;
+    --warm: #F5B14C;
+    --ink: #050608;
+    --panel-border: rgba(255,255,255,0.09);
+    --text-dim: rgba(230,242,244,0.62);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--ink);
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #eaf7f8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #scene{
+    position: fixed;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--ink);
+  }
+
+  /* cinematic vignette, cheap and layered above the canvas */
+  .vignette{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background:
+      radial-gradient(ellipse at 50% 42%, rgba(5,6,8,0) 0%, rgba(5,6,8,0) 40%, rgba(5,6,8,0.55) 78%, rgba(5,6,8,0.92) 100%);
+  }
+
+  .grain{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.9) 0.6px, transparent 0.6px);
+    background-size: 3px 3px;
+  }
+
+  .wordmark{
+    position: fixed;
+    top: 28px;
+    left: 32px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: lowercase;
+    color: rgba(240,250,251,0.88);
+    user-select: none;
+  }
+
+  .wordmark .dot{
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--cyan-soft);
+    box-shadow: 0 0 10px 2px rgba(79,227,232,0.75), 0 0 22px 6px rgba(79,227,232,0.25);
+    flex: none;
+  }
+
+  .stage{
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    pointer-events: none;
+  }
+
+  .panel{
+    pointer-events: auto;
+    width: min(560px, 100%);
+    padding: 44px 44px 38px;
+    border-radius: 22px;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(12,17,21,0.58), rgba(7,10,13,0.46));
+    border: 1px solid var(--panel-border);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+    backdrop-filter: blur(22px) saturate(140%);
+    box-shadow:
+      0 30px 80px -20px rgba(0,0,0,0.65),
+      0 0 0 1px rgba(255,255,255,0.02) inset,
+      0 1px 0 0 rgba(255,255,255,0.06) inset,
+      0 0 120px -40px rgba(79,227,232,0.35);
+  }
+
+  .eyebrow{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--cyan-soft);
+    opacity: 0.85;
+    margin: 0 0 18px;
+  }
+
+  .eyebrow::before,
+  .eyebrow::after{
+    content: "";
+    width: 16px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(125,238,241,0.7));
+  }
+  .eyebrow::after{ transform: scaleX(-1); }
+
+  h1{
+    margin: 0 0 16px;
+    font-size: clamp(1.9rem, 5.4vw, 3.15rem);
+    line-height: 1.08;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    background: linear-gradient(180deg, #ffffff 0%, #d9f7f8 55%, var(--cyan-soft) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .sub{
+    margin: 0 auto 30px;
+    max-width: 420px;
+    font-size: clamp(0.94rem, 1.6vw, 1.05rem);
+    line-height: 1.55;
+    color: var(--text-dim);
+    font-weight: 400;
+  }
+
+  .cta{
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 28px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 650;
+    letter-spacing: 0.01em;
+    color: #04181d;
+    background: linear-gradient(135deg, var(--cyan-soft), var(--cyan) 55%, #38c9d4);
+    box-shadow:
+      0 10px 30px -8px rgba(79,227,232,0.55),
+      0 0 0 1px rgba(255,255,255,0.18) inset;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .cta:hover{
+    transform: translateY(-1px);
+    box-shadow:
+      0 14px 38px -8px rgba(79,227,232,0.7),
+      0 0 0 1px rgba(255,255,255,0.24) inset;
+  }
+
+  .cta:active{ transform: translateY(0px) scale(0.98); }
+
+  .cta svg{ width: 15px; height: 15px; flex: none; }
+
+  .meta{
+    margin: 26px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: rgba(230,242,244,0.4);
+  }
+
+  .meta span.sep{
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(230,242,244,0.3);
+  }
+
+  @media (max-width: 560px){
+    .panel{
+      padding: 34px 26px 30px;
+      border-radius: 18px;
+    }
+    .wordmark{ top: 18px; left: 18px; font-size: 12.5px; }
+  }
+
+  @media (max-width: 400px){
+    .panel{ padding: 28px 20px 26px; }
+    h1{ font-size: 1.6rem; }
+    .meta{ font-size: 10.5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .cta{ transition: none; }
+  }
+</style>
+</head>
+<body>
+
+  <canvas id="scene"></canvas>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+
+  <div class="wordmark"><span class="dot"></span>starfield</div>
+
+  <div class="stage">
+    <div class="panel">
+      <p class="eyebrow">Particle Hero Scene</p>
+      <h1>Depth, on a budget.</h1>
+      <p class="sub">A GPU-cheap particle field that reads as premium motion design — thousands of drifting points, soft parallax, and glowing connections. Zero dependencies, one file.</p>
+      <button class="cta" type="button">
+        Get Starfield
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3.5 8H12.5M12.5 8L8.5 4M12.5 8L8.5 12" stroke="#04181d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="meta">
+        <span>2,200 particles</span>
+        <span class="sep"></span>
+        <span>60fps canvas</span>
+        <span class="sep"></span>
+        <span>no libraries</span>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  var canvas = document.getElementById('scene');
+  var ctx = canvas.getContext('2d', { alpha: false });
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var width = 0, height = 0, dpr = 1;
+  var particles = [];
+  var connectDist = 86;
+  var linkDepthThreshold = 0.62;
+
+  var pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+  var startTime = performance.now();
+
+  function makeSprite(core, mid, edge, size){
+    var off = document.createElement('canvas');
+    off.width = off.height = size;
+    var o = off.getContext('2d');
+    var r = size / 2;
+    var g = o.createRadialGradient(r, r, 0, r, r, r);
+    g.addColorStop(0, core);
+    g.addColorStop(0.42, mid);
+    g.addColorStop(1, edge);
+    o.fillStyle = g;
+    o.beginPath();
+    o.arc(r, r, r, 0, Math.PI * 2);
+    o.fill();
+    return off;
+  }
+
+  var SPRITE_SIZE = 72;
+  var cyanSprite = makeSprite(
+    'rgba(219,255,255,1)',
+    'rgba(79,227,232,0.55)',
+    'rgba(79,227,232,0)',
+    SPRITE_SIZE
+  );
+  var warmSprite = makeSprite(
+    'rgba(255,242,222,1)',
+    'rgba(245,177,76,0.5)',
+    'rgba(245,177,76,0)',
+    SPRITE_SIZE
+  );
+
+  function rand(a, b){ return a + Math.random() * (b - a); }
+
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (pointer.tx === 0 && pointer.ty === 0){
+      pointer.x = pointer.tx = width / 2;
+      pointer.y = pointer.ty = height / 2;
+    }
+  }
+
+  function initParticles(){
+    var area = width * height;
+    var count = Math.round(area / 780);
+    count = Math.max(900, Math.min(2600, count));
+    particles = new Array(count);
+    for (var i = 0; i < count; i++){
+      var depth = Math.random();
+      var warm = Math.random() < 0.035;
+      var speed = 0.045 + depth * 0.09;
+      var ang = rand(0, Math.PI * 2);
+      particles[i] = {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: Math.cos(ang) * speed,
+        vy: Math.sin(ang) * speed - depth * 0.018,
+        r: 0.55 + depth * 1.75 + (warm ? 0.5 : 0),
+        base: 0.12 + depth * 0.58,
+        depth: depth,
+        warm: warm,
+        tw: Math.random() * Math.PI * 2,
+        tws: 0.25 + Math.random() * 0.55
+      };
+    }
+  }
+
+  function onPointerMove(e){
+    var x, y;
+    if (e.touches && e.touches.length){
+      x = e.touches[0].clientX; y = e.touches[0].clientY;
+    } else {
+      x = e.clientX; y = e.clientY;
+    }
+    pointer.tx = x;
+    pointer.ty = y;
+  }
+
+  window.addEventListener('pointermove', onPointerMove, { passive: true });
+  window.addEventListener('resize', function(){
+    var oldW = width || window.innerWidth;
+    var oldH = height || window.innerHeight;
+    var sx, sy;
+    resize();
+    sx = width / oldW; sy = height / oldH;
+    for (var i = 0; i < particles.length; i++){
+      particles[i].x *= sx;
+      particles[i].y *= sy;
+    }
+    if (reduceMotion) renderStatic();
+  });
+
+  function drawBackground(t){
+    ctx.fillStyle = '#050608';
+    ctx.fillRect(0, 0, width, height);
+
+    var pulse = 0.5 + 0.5 * Math.sin(t * 0.00028);
+    var gx = width * 0.5 + (pointer.x / width - 0.5) * 40;
+    var gy = height * 0.4 + (pointer.y / height - 0.5) * 30;
+    var gr = Math.max(width, height) * 0.65;
+
+    var g1 = ctx.createRadialGradient(gx, gy, 0, gx, gy, gr);
+    g1.addColorStop(0, 'rgba(79,227,232,' + (0.10 + pulse * 0.07) + ')');
+    g1.addColorStop(0.45, 'rgba(60,150,160,' + (0.045 + pulse * 0.03) + ')');
+    g1.addColorStop(1, 'rgba(5,6,8,0)');
+    ctx.fillStyle = g1;
+    ctx.fillRect(0, 0, width, height);
+
+    var warmPulse = 0.5 + 0.5 * Math.sin(t * 0.00011 + 2.1);
+    if (warmPulse > 0.62){
+      var wx = width * 0.78;
+      var wy = height * 0.72;
+      var wr = Math.max(width, height) * 0.32;
+      var wAlpha = (warmPulse - 0.62) * 0.16;
+      var g2 = ctx.createRadialGradient(wx, wy, 0, wx, wy, wr);
+      g2.addColorStop(0, 'rgba(245,177,76,' + wAlpha + ')');
+      g2.addColorStop(1, 'rgba(245,177,76,0)');
+      ctx.fillStyle = g2;
+      ctx.fillRect(0, 0, width, height);
+    }
+  }
+
+  var linkBuckets = [[], [], []];
+
+  function buildGrid(){
+    var cell = connectDist;
+    var grid = new Map();
+    var cols = Math.ceil(width / cell) + 2;
+    for (var i = 0; i < particles.length; i++){
+      var p = particles[i];
+      if (p.depth < linkDepthThreshold) continue;
+      var cx = (p.x / cell) | 0;
+      var cy = (p.y / cell) | 0;
+      var key = cy * cols + cx;
+      var bucket = grid.get(key);
+      if (!bucket){ bucket = []; grid.set(key, bucket); }
+      bucket.push(i);
+    }
+    return { grid: grid, cell: cell, cols: cols };
+  }
+
+  function drawLinks(px, py){
+    linkBuckets[0].length = 0;
+    linkBuckets[1].length = 0;
+    linkBuckets[2].length = 0;
+
+    var gridInfo = buildGrid();
+    var grid = gridInfo.grid, cell = gridInfo.cell, cols = gridInfo.cols;
+
+    for (var i = 0; i < particles.length; i++){
+      var p = particles[i];
+      if (p.depth < linkDepthThreshold) continue;
+      var cx = (p.x / cell) | 0;
+      var cy = (p.y / cell) | 0;
+      for (var dx = -1; dx <= 1; dx++){
+        for (var dy = -1; dy <= 1; dy++){
+          var key = (cy + dy) * cols + (cx + dx);
+          var bucket = grid.get(key);
+          if (!bucket) continue;
+          for (var b = 0; b < bucket.length; b++){
+            var j = bucket[b];
+            if (j <= i) continue;
+            var q = particles[j];
+            var ddx = p.x - q.x, ddy = p.y - q.y;
+            var d2 = ddx * ddx + ddy * ddy;
+            if (d2 < connectDist * connectDist){
+              var t = 1 - Math.sqrt(d2) / connectDist;
+              var idx = t > 0.66 ? 2 : (t > 0.33 ? 1 : 0);
+              linkBuckets[idx].push(
+                p.x + px * p.depth, p.y + py * p.depth,
+                q.x + px * q.depth, q.y + py * q.depth
+              );
+            }
+          }
+        }
+      }
+    }
+
+    var alphas = [0.03, 0.07, 0.14];
+    for (var lb = 0; lb < 3; lb++){
+      var arr = linkBuckets[lb];
+      if (!arr.length) continue;
+      var path = new Path2D();
+      for (var k = 0; k < arr.length; k += 4){
+        path.moveTo(arr[k], arr[k + 1]);
+        path.lineTo(arr[k + 2], arr[k + 3]);
+      }
+      ctx.strokeStyle = 'rgba(125,238,241,1)';
+      ctx.globalAlpha = alphas[lb];
+      ctx.lineWidth = 1;
+      ctx.stroke(path);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function step(t, dt){
+    var maxParallax = 22;
+    var px = (pointer.x / width - 0.5) * 2 * maxParallax;
+    var py = (pointer.y / height - 0.5) * 2 * maxParallax;
+
+    for (var i = 0; i < particles.length; i++){
+      var p = particles[i];
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+
+      if (p.x < -20) p.x = width + 20;
+      if (p.x > width + 20) p.x = -20;
+      if (p.y < -20) p.y = height + 20;
+      if (p.y > height + 20) p.y = -20;
+    }
+
+    drawLinks(px, py);
+
+    for (var j = 0; j < particles.length; j++){
+      var q = particles[j];
+      var alpha = q.base * (0.72 + 0.28 * Math.sin(t * 0.001 * q.tws + q.tw));
+      var sprite = q.warm ? warmSprite : cyanSprite;
+      var size = q.r * 9;
+      var dxp = q.x + px * q.depth - size / 2;
+      var dyp = q.y + py * q.depth - size / 2;
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+      ctx.drawImage(sprite, dxp, dyp, size, size);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  var lastT = 0;
+
+  function frame(now){
+    var t = now - startTime;
+    var dt = lastT ? Math.min(2.4, (now - lastT) / (1000 / 60)) : 1;
+    lastT = now;
+
+    pointer.x += (pointer.tx - pointer.x) * 0.045;
+    pointer.y += (pointer.ty - pointer.y) * 0.045;
+
+    drawBackground(t);
+    step(t, dt);
+
+    requestAnimationFrame(frame);
+  }
+
+  function renderStatic(){
+    drawBackground(1400);
+    var px = 0, py = 0;
+    for (var i = 0; i < particles.length; i++){
+      var p = particles[i];
+      var alpha = p.base * 0.9;
+      var sprite = p.warm ? warmSprite : cyanSprite;
+      var size = p.r * 9;
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(sprite, p.x - size / 2, p.y - size / 2, size, size);
+    }
+    ctx.globalAlpha = 1;
+    drawLinks(px, py);
+  }
+
+  function start(){
+    resize();
+    initParticles();
+    if (reduceMotion){
+      renderStatic();
+    } else {
+      requestAnimationFrame(frame);
+    }
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+</script>
+</body>
+</html>
