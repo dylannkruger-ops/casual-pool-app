@@ -45,7 +45,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+  modal,
+}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
     <html lang="en-AU" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <head>
@@ -59,6 +60,9 @@ export default function RootLayout({
       <body>
         <Backdrop />
         {children}
+        {/* Intercepting-route slot: item detail opens here as a modal when
+            navigated client-side; a hard load renders the full /l/[slug] page. */}
+        {modal}
         <FilmGrain />
       </body>
     </html>
