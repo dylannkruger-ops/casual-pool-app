@@ -10,10 +10,6 @@ the bait, premium items are gated, and new drops land every Friday.
 Built with **Next.js 15 (App Router) · TypeScript · Tailwind CSS v4 · Supabase
 · Stripe**, deployed on **Vercel**.
 
-> **Note:** this repository previously held an unrelated Expo/React Native app
-> ("Casual Pool"). That scaffold has been replaced at the root by Underlay; its
-> history remains in git.
-
 ---
 
 ## Design system
