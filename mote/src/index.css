@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-canvas text-shell-ink;
+  }
+  /* Focus ring uses the glow, once, everywhere. */
+  :where(a, button, input, select, [tabindex]):focus-visible {
+    @apply outline-none ring-2 ring-glow ring-offset-2 ring-offset-canvas rounded-lg;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl2 border border-black/[.06] bg-white shadow-card;
+  }
+  .muted {
+    @apply text-shell-ink/55;
+  }
+  .hairline {
+    @apply border-black/[.07];
+  }
+}
