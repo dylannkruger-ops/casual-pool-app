@@ -80,6 +80,40 @@ export type Plan = 'free' | 'pro' | 'studio';
 
 export type Project = { id: string; name: string; tint: string };
 
+/**
+ * Layer 1 of the execution hierarchy (PRD §5.4). One MCP client, not a pile of
+ * per-app integrations — an app connector and a custom server are the same
+ * thing wearing different labels.
+ */
+export type Connector = {
+  id: string;
+  name: string;
+  kind: 'app' | 'mcp';
+  category: string;
+  blurb: string;
+  connected: boolean;
+  /** Custom servers only. */
+  url?: string;
+  auth?: 'token' | 'oauth' | 'none';
+  /** Declared at connect time and enforced at runtime (FR-37). */
+  permissions: string[];
+  tools?: string[];
+  custom?: boolean;
+};
+
+/** What happens when the month's model spend reaches the cap. */
+export type CapBehaviour = 'pause' | 'byo-key' | 'ask';
+
+export type SpendGuard = {
+  /** null means no cap set. */
+  monthlyCapUsd: number | null;
+  /** Warn at this share of the cap. */
+  alertAtPct: number;
+  /** A single run that would cost more than this halts and asks. */
+  perRunCeilingUsd: number;
+  atCap: CapBehaviour;
+};
+
 export type CollabRole = 'viewer' | 'approver';
 
 export type Collaborator = {

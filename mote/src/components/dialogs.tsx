@@ -1,18 +1,23 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ROSTER, byId } from '../data/roster';
-import { useMote } from '../store/useMote';
+import { spendStatus, useMote } from '../store/useMote';
 import { Avatar, PersonAvatar } from './Avatar';
 import { Field, Modal, inputClass } from './Modal';
 import { Button, Chip } from './ui';
 import type { CollabRole } from '../lib/types';
 
 export function NewTaskDialog({ open, onClose, projectId }: { open: boolean; onClose: () => void; projectId?: string }) {
-  const { hired, projects, createTask } = useMote();
+  const { hired, projects, createTask, spend, spendByEmployee } = useMote();
   const [title, setTitle] = useState('');
   const [assignee, setAssignee] = useState('mote');
   const [project, setProject] = useState(projectId ?? '');
   const navigate = useNavigate();
+
+  // Over the cap with "stop starting new work", createTask refuses. Say so
+  // here rather than appearing to accept the job and doing nothing.
+  const status = spendStatus({ spend, spendByEmployee });
+  const capBlocked = status.blocked && spend.atCap === 'pause';
 
   // You can hand a job straight to someone, or let MOTE work out whose it is.
   const options = [byId('mote')!, ...ROSTER.filter((e) => hired.includes(e.id))];
@@ -20,6 +25,7 @@ export function NewTaskDialog({ open, onClose, projectId }: { open: boolean; onC
   const submit = () => {
     if (!title.trim()) return;
     const id = createTask({ title: title.trim(), employeeId: assignee, projectId: project || undefined });
+    if (!id) return; // refused by the spend guard
     setTitle('');
     setAssignee('mote');
     onClose();
@@ -28,6 +34,16 @@ export function NewTaskDialog({ open, onClose, projectId }: { open: boolean; onC
 
   return (
     <Modal open={open} onClose={onClose} title="New task" sub="Say what you want done. MOTE routes it unless you pick someone.">
+      {capBlocked && (
+        <div className="mb-4 rounded-xl bg-[#fbdfe5] px-4 py-3 text-[13px] text-[#a8455a]">
+          You are at this month's spend cap and your team is set to stop starting new work.{' '}
+          <Link to="/spend" onClick={onClose} className="underline underline-offset-2">
+            Raise the cap
+          </Link>{' '}
+          to carry on. Work already running is unaffected.
+        </div>
+      )}
+
       <Field label="What needs doing?">
         <textarea
           autoFocus
@@ -77,7 +93,7 @@ export function NewTaskDialog({ open, onClose, projectId }: { open: boolean; onC
       </Field>
 
       <div className="mt-6 flex items-center gap-2">
-        <Button onClick={submit} disabled={!title.trim()}>
+        <Button onClick={submit} disabled={!title.trim() || capBlocked}>
           Start task
         </Button>
         <Button variant="quiet" onClick={onClose}>

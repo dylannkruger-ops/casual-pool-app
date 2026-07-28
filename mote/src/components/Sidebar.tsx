@@ -29,7 +29,7 @@ export function Sidebar() {
   const recent = tasks.filter((t) => !t.favourite).slice(0, 5);
 
   return (
-    <aside className="flex h-screen w-[262px] shrink-0 flex-col overflow-y-auto border-r hairline bg-canvas px-3.5 py-5">
+    <aside className="hidden h-screen w-[262px] shrink-0 flex-col overflow-y-auto border-r hairline bg-canvas px-3.5 py-5 lg:flex">
       <div className="mb-4 flex items-center gap-2.5 px-2">
         <Avatar id="mote" size={28} />
         <span className="text-[15px] font-semibold tracking-[-.01em]">MOTE</span>
@@ -69,7 +69,7 @@ export function Sidebar() {
             </span>
           </NavLink>
         ))}
-        <NavLink to="/" className={link}>
+        <NavLink to="/history" className={link}>
           <span className="text-shell-ink/45">All tasks</span>
         </NavLink>
       </nav>
@@ -114,6 +114,12 @@ export function Sidebar() {
         </NavLink>
         <NavLink to="/team" className={link}>
           Your team
+        </NavLink>
+        <NavLink to="/connectors" className={link}>
+          Connectors
+        </NavLink>
+        <NavLink to="/spend" className={link}>
+          Spend guard
         </NavLink>
         <NavLink to="/runs" className={link}>
           Work log

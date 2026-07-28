@@ -1,15 +1,19 @@
 import { create } from 'zustand';
 import { APPROVALS, RUNS } from '../data/runs';
 import { COLLABORATORS, PROJECTS, TASKS } from '../data/workspace';
+import { CONNECTORS } from '../data/connectors';
 import { ROSTER, byId } from '../data/roster';
 import type {
   Approval,
+  CapBehaviour,
   CollabRole,
   Collaborator,
+  Connector,
   MoteStateName,
   Plan,
   Project,
   Run,
+  SpendGuard,
   Task,
 } from '../lib/store-types';
 
@@ -33,6 +37,10 @@ type State = {
   tasks: Task[];
   projects: Project[];
   collaborators: Collaborator[];
+  connectors: Connector[];
+  spend: SpendGuard;
+  /** Model spend so far this month, in US$, by employee. */
+  spendByEmployee: Record<string, number>;
   activeEmployee: string;
   widget: MoteStateName;
   discreet: boolean;
@@ -54,6 +62,15 @@ type State = {
   invite: (taskId: string, email: string, role: CollabRole) => void;
   uninvite: (taskId: string, collaboratorId: string) => void;
   setTaskRole: (collaboratorId: string, role: CollabRole) => void;
+
+  toggleConnector: (id: string) => void;
+  addMcpServer: (input: { name: string; url: string; auth: 'token' | 'none'; permissions: string[] }) => void;
+  removeConnector: (id: string) => void;
+
+  setCap: (usd: number | null) => void;
+  setAlertPct: (pct: number) => void;
+  setPerRunCeiling: (usd: number) => void;
+  setAtCap: (b: CapBehaviour) => void;
 
   setWidget: (s: MoteStateName) => void;
   setActive: (id: string) => void;
@@ -87,6 +104,9 @@ export const useMote = create<State>((set, get) => ({
   tasks: TASKS,
   projects: PROJECTS,
   collaborators: COLLABORATORS,
+  connectors: CONNECTORS,
+  spend: { monthlyCapUsd: 40, alertAtPct: 80, perRunCeilingUsd: 0.5, atCap: 'ask' },
+  spendByEmployee: { wren: 11.4, tally: 7.2, marlow: 9.8, sage: 3.1, mote: 1.2 },
   activeEmployee: 'wren',
   widget: 'needs-you',
   discreet: false,
@@ -140,6 +160,9 @@ export const useMote = create<State>((set, get) => ({
   },
 
   createTask: ({ title, employeeId, projectId }) => {
+    // The spend guard is a floor on runaway model cost, not a credit meter:
+    // it never touches features you have paid for, only new model work.
+    if (spendStatus(get()).blocked && get().spend.atCap === 'pause') return '';
     const id = nextId('t');
     const employee = byId(employeeId);
     const routed = employeeId === 'mote';
@@ -259,6 +282,37 @@ export const useMote = create<State>((set, get) => ({
       collaborators: s.collaborators.map((c) => (c.id === collaboratorId ? { ...c, role } : c)),
     })),
 
+  toggleConnector: (id) =>
+    set((s) => ({
+      connectors: s.connectors.map((c) => (c.id === id ? { ...c, connected: !c.connected } : c)),
+    })),
+
+  addMcpServer: ({ name, url, auth, permissions }) =>
+    set((s) => ({
+      connectors: [
+        ...s.connectors,
+        {
+          id: nextId('mcp'),
+          name,
+          kind: 'mcp',
+          category: 'Custom',
+          blurb: 'Custom MCP server you added.',
+          connected: true,
+          custom: true,
+          url,
+          auth,
+          permissions: permissions.length ? permissions : ['Declared by the server at connect time'],
+        },
+      ],
+    })),
+
+  removeConnector: (id) => set((s) => ({ connectors: s.connectors.filter((c) => c.id !== id) })),
+
+  setCap: (monthlyCapUsd) => set((s) => ({ spend: { ...s.spend, monthlyCapUsd } })),
+  setAlertPct: (alertAtPct) => set((s) => ({ spend: { ...s.spend, alertAtPct } })),
+  setPerRunCeiling: (perRunCeilingUsd) => set((s) => ({ spend: { ...s.spend, perRunCeilingUsd } })),
+  setAtCap: (atCap) => set((s) => ({ spend: { ...s.spend, atCap } })),
+
   setWidget: (widget) => set({ widget }),
   setActive: (activeEmployee) => set({ activeEmployee }),
   kill: () => set({ widget: 'idle' }),
@@ -269,5 +323,22 @@ export const useMote = create<State>((set, get) => ({
     set((s) => (pattern && !s.blocklist.includes(pattern) ? { blocklist: [...s.blocklist, pattern] } : s)),
   removeBlock: (pattern) => set((s) => ({ blocklist: s.blocklist.filter((b) => b !== pattern) })),
 }));
+
+/**
+ * Month-to-date model spend against the cap. `blocked` only ever gates starting
+ * new model work — never export, never your logs, never a run already going.
+ */
+export const spendStatus = (s: { spend: SpendGuard; spendByEmployee: Record<string, number> }) => {
+  const used = Object.values(s.spendByEmployee).reduce((a, b) => a + b, 0);
+  const cap = s.spend.monthlyCapUsd;
+  const pct = cap ? Math.min(100, (used / cap) * 100) : 0;
+  return {
+    used,
+    cap,
+    pct,
+    alerting: cap !== null && pct >= s.spend.alertAtPct,
+    blocked: cap !== null && used >= cap,
+  };
+};
 
 export const employeeTint = (id: string) => ROSTER.find((e) => e.id === id)?.tint ?? '#2fd463';

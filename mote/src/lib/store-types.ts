@@ -1,9 +1,12 @@
 export type {
   Approval,
   Author,
+  CapBehaviour,
   CollabRole,
   Collaborator,
+  Connector,
   Employee,
+  SpendGuard,
   Layer,
   Message,
   Plan,

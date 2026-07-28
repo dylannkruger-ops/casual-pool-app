@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useMote } from '../store/useMote';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { spendStatus, useMote } from '../store/useMote';
 import { byId } from '../data/roster';
 import { Avatar } from '../components/Avatar';
 import { TaskGroup } from '../components/TaskList';
@@ -28,8 +28,14 @@ function Composer({ onOpen }: { onOpen: (seed: string) => void }) {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="What should the team do?"
-            className="h-11 flex-1 rounded-xl bg-transparent text-[15px] placeholder:text-shell-ink/30 focus-visible:ring-0"
+            aria-label="What should the team do?"
+            className="h-11 min-w-0 flex-1 rounded-xl bg-transparent text-[15px] placeholder:text-shell-ink/30 focus-visible:ring-0"
           />
+          <span className="hidden sm:block">
+            <Button disabled={!text.trim()}>Start task</Button>
+          </span>
+        </div>
+        <div className="mt-2 sm:hidden">
           <Button disabled={!text.trim()}>Start task</Button>
         </div>
       </form>
@@ -44,9 +50,59 @@ function Composer({ onOpen }: { onOpen: (seed: string) => void }) {
 }
 
 export function Home() {
-  const { tasks } = useMote();
+  const { tasks, spend, spendByEmployee } = useMote();
   const [seed, setSeed] = useState<string | null>(null);
+  const status = spendStatus({ spend, spendByEmployee });
 
+  const favourites = tasks.filter((t) => t.favourite);
+  const today = tasks.filter((t) => t.bucket === 'today' && !t.favourite);
+
+  return (
+    <>
+      <div className="hidden lg:block">
+        <PageHead title="Home" sub="Ask for something, and it becomes a task with a receipt." />
+      </div>
+
+      {(status.blocked || status.alerting) && (
+        <Link
+          to="/spend"
+          className={`mb-4 flex items-center justify-between gap-3 rounded-xl2 px-4 py-3 text-[13px] ${
+            status.blocked ? 'bg-[#fbdfe5] text-[#a8455a]' : 'bg-[#faeecd] text-[#8a6a12]'
+          }`}
+        >
+          <span>
+            {status.blocked
+              ? 'Spend cap reached. No new work starts until you raise it.'
+              : `${Math.round(status.pct)}% of this month's spend cap used.`}
+          </span>
+          <span className="shrink-0 underline underline-offset-2">Spend guard</span>
+        </Link>
+      )}
+
+      <Composer onOpen={setSeed} />
+
+      <TaskGroup label="★ Favourites" tasks={favourites} />
+      <TaskGroup label="Today" tasks={today} />
+
+      {tasks.length === 0 ? (
+        <Card className="px-6 py-14 text-center">
+          <p className="text-[15px] font-medium">No tasks yet.</p>
+          <p className="mt-1 text-[13.5px] muted">Ask for something above and MOTE will pick it up.</p>
+        </Card>
+      ) : (
+        <Link to="/history" className="inline-block text-[13.5px] muted underline underline-offset-2 hover:text-shell-ink">
+          See everything the team has done →
+        </Link>
+      )}
+
+      <NewTaskDialog open={seed !== null} onClose={() => setSeed(null)} />
+    </>
+  );
+}
+
+/** The full log, grouped by when it happened — Sintra's History tab. */
+export function History() {
+  const { tasks } = useMote();
   const favourites = tasks.filter((t) => t.favourite);
   const today = tasks.filter((t) => t.bucket === 'today' && !t.favourite);
   const yesterday = tasks.filter((t) => t.bucket === 'yesterday' && !t.favourite);
@@ -54,23 +110,13 @@ export function Home() {
 
   return (
     <>
-      <PageHead title="Tasks" sub="Everything you have asked the team to do, and everything they said back." />
-
-      <Composer onOpen={setSeed} />
-
-      <TaskGroup label="★ Favourites" tasks={favourites} />
-      <TaskGroup label="Today" tasks={today} />
-      <TaskGroup label="Yesterday" tasks={yesterday} />
-      <TaskGroup label="Earlier" tasks={earlier} />
-
-      {tasks.length === 0 && (
-        <Card className="px-6 py-14 text-center">
-          <p className="text-[15px] font-medium">No tasks yet.</p>
-          <p className="mt-1 text-[13.5px] muted">Ask for something above and MOTE will pick it up.</p>
-        </Card>
-      )}
-
-      <NewTaskDialog open={seed !== null} onClose={() => setSeed(null)} />
+      <div className="hidden lg:block">
+        <PageHead title="History" sub="Everything you have asked the team to do, and everything they said back." />
+      </div>
+      <TaskGroup label={`★ Favourites · ${favourites.length}`} tasks={favourites} />
+      <TaskGroup label={`Today · ${today.length}`} tasks={today} />
+      <TaskGroup label={`Yesterday · ${yesterday.length}`} tasks={yesterday} />
+      <TaskGroup label={`Earlier · ${earlier.length}`} tasks={earlier} />
     </>
   );
 }

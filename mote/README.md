@@ -31,7 +31,40 @@ npm run build    # tsc -b && vite build
 | Performance | `/performance` | The bench numbers, including the skills that have not cleared the gate |
 | Privacy | `/trust` | The eight commitments, each carrying its own exceptions |
 | Plan | `/plan` | Free / Pro / Studio, with unshipped features labelled rather than sold |
+| Connectors | `/connectors` | App connectors and your own MCP servers, each showing what it may do |
+| Spend guard | `/spend` | A hard ceiling on monthly model spend, and where it went |
 | Settings | `/settings` | Redaction blocklist, retention, telemetry opt-in, discreet mode |
+
+## Mobile
+
+Below `lg` the sidebar and the face widget disappear and Sintra's shape takes
+over: a header naming the screen, a floating pill tab bar (Home / History / Team
+/ Approvals / More), a FAB for a new task, and a status strip where the widget
+would be on a desktop. Mobile is for asking, watching and approving — the desk
+work still happens at the machine, per the PRD's no-mobile-device-control rule.
+
+## Spend guard
+
+Deliberately **not** a credit meter. The PRD promises paid plans are never
+metered, and this keeps that promise: the guard only ever gates *starting new
+model work*. It never withholds a feature you paid for, never pauses a run
+already going, and never touches your logs or exports.
+
+- **Monthly cap** in dollars, with a warning threshold before you reach it
+- **Per-run ceiling** — catches a runaway loop directly, without waiting for the month
+- **At the cap**: ask, stop starting new work, or fall through to your own API key
+- **Where it went**, broken down per employee
+
+When the cap blocks work, the New task dialog says so and links to raising it —
+it never accepts a job and quietly does nothing.
+
+## Connectors
+
+Layer 1 of the execution hierarchy. An app connector and a custom MCP server are
+the same thing under the hood — one MCP client — so anything you can expose as an
+MCP server becomes something the team can use, with no per-app integration to wait
+for. Every connector declares what it may do before you connect it, and access
+tokens go to the OS credential store, never to MOTE's servers.
 
 ## The team
 

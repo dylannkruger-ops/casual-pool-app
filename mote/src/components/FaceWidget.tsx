@@ -37,7 +37,7 @@ export function FaceWidget() {
     return (
       <button
         onClick={() => setCollapsed(false)}
-        className="fixed bottom-6 right-6 flex h-6 w-6 items-center justify-center rounded-full bg-shell-ink shadow-widget"
+        className="fixed bottom-6 right-6 hidden h-6 w-6 items-center justify-center rounded-full bg-shell-ink shadow-widget lg:flex"
         aria-label="Expand Mote"
       >
         <span className="h-2 w-2 rounded-full" style={{ background: tint }} />
@@ -46,7 +46,7 @@ export function FaceWidget() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 w-[292px] overflow-hidden rounded-xl2 bg-shell-ink text-white shadow-widget">
+    <div className="fixed bottom-6 right-6 hidden w-[292px] overflow-hidden rounded-xl2 bg-shell-ink text-white shadow-widget lg:block">
       <div className="flex items-center gap-3 px-4 pt-4">
         <button onClick={kill} title="Click the face to halt (or press Esc)" className="shrink-0">
           <Mote state={widget} tint={tint} size={54} arms={false} />

@@ -143,9 +143,10 @@ export function Row({
 
 export function PageHead({ title, sub, action }: { title: string; sub?: string; action?: ReactNode }) {
   return (
-    <div className="mb-7 flex items-end justify-between gap-6">
+    <div className="mb-6 flex flex-col items-start gap-3 sm:mb-7 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
       <div>
-        <h1 className="text-[26px] font-semibold tracking-[-.02em]">{title}</h1>
+        {/* The mobile header already names the screen — no need to say it twice. */}
+        <h1 className="hidden text-[26px] font-semibold tracking-[-.02em] lg:block">{title}</h1>
         {sub && <p className="mt-1.5 max-w-2xl text-[14px] muted">{sub}</p>}
       </div>
       {action}
