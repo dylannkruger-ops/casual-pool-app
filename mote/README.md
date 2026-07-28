@@ -21,14 +21,53 @@ npm run build    # tsc -b && vite build
 
 | Screen | Route | What it demonstrates |
 |---|---|---|
-| Roster | `/` | Hire and retire against plan seats; gated employees show live bench rates, onboarding ones show a date and never a number |
-| Employee | `/employee/:id` | Skills with preconditions and documented failure modes; the trust profile |
+| Tasks | `/` | The front door: ask for something, and it becomes a task. Favourites, then Today / Yesterday / Earlier |
+| Task | `/task/:id` | The chat log — you, MOTE routing it, the employee working, receipts inline, approvals as crown cards, collaborators commenting |
+| Project | `/project/:id` | Tasks filed under one project |
+| Team | `/team` | MOTE above the roster; hire and retire against plan seats |
+| Employee | `/employee/:id` | The character's profile: portrait, what they own, preconditions, documented failure modes, trust profile, their tasks |
 | Approvals | `/approvals` | The crown surface — red and amber decisions, redacted previews, deny-and-halt |
 | Work log | `/runs`, `/runs/:id` | Step-by-step receipts: execution layer, action tier, verify result, and the expected/observed report on a halt |
 | Performance | `/performance` | The bench numbers, including the skills that have not cleared the gate |
 | Privacy | `/trust` | The eight commitments, each carrying its own exceptions |
 | Plan | `/plan` | Free / Pro / Studio, with unshipped features labelled rather than sold |
 | Settings | `/settings` | Redaction blocklist, retention, telemetry opt-in, discreet mode |
+
+## The team
+
+MOTE leads: he takes the job, decides whose it is, and holds anything needing your
+yes. He never occupies a plan seat and can't be retired. The other eight own one
+narrow job each.
+
+| | Who | Job | Portrait source |
+|---|---|---|---|
+| 👑 | **MOTE** | Chief of staff — routes the work | solo render |
+| 🎧 | **Wren** | Front desk — inbox triage, drafted replies | group shot |
+| 👓 | **Tally** | Bookkeeping — cross-app reconcile | group shot |
+| 🧣 | **Marlow** | Research — sources into a brief | group shot |
+| 📈 | **Sage** | Analyst — the week as one number | solo render |
+| 👔 | **Vance** | Deals — quotes and proposals | group shot |
+| 🎬 | **Juno** | Media — cuts, captions, filing | solo render (his clapperboard names him) |
+| 🧰 | **Rig** | Operations — keeps the tools talking | solo render |
+| 💻 | **Ash** | Data plumbing — A→B, forty times | solo render |
+
+Portraits live in `public/team/` as 4:5 head-and-torso crops. Five came from solo
+renders; four were framed out of the group shot, where the figures sit ~175px
+apart — the crop boxes in the generator are sized to land just inside each
+neighbour. Below 28px the portraits read as identical dark squares, so `Avatar`
+adds the employee's eye tint as a ring at small sizes.
+
+## Tasks, collaborators, favourites
+
+A task is a conversation with a receipt attached. Messages come from you, from
+MOTE, from the assigned employee, or from a collaborator, and the employee's
+claims are backed by an inline step list — the same records the work log stores.
+
+**Collaborators** are invited per task by email and see that task only. Roles are
+"can view" and "can approve", where approve covers amber steps. Red actions —
+sending, submitting, deleting — always come back to the owner, whoever else is on
+the task. **Favourites** star a task into the sidebar and into a group at the top
+of every list.
 
 State is Zustand over fixtures in `src/data/`. There is no backend — actions
 (hire, approve, deny, downgrade, edit the blocklist) mutate the store and the rest

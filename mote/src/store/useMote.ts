@@ -1,12 +1,27 @@
 import { create } from 'zustand';
 import { APPROVALS, RUNS } from '../data/runs';
-import { ROSTER } from '../data/roster';
-import type { Approval, MoteStateName, Plan, Run } from '../lib/store-types';
+import { COLLABORATORS, PROJECTS, TASKS } from '../data/workspace';
+import { ROSTER, byId } from '../data/roster';
+import type {
+  Approval,
+  CollabRole,
+  Collaborator,
+  MoteStateName,
+  Plan,
+  Project,
+  Run,
+  Task,
+} from '../lib/store-types';
 
 export type { MoteStateName };
 
-/** Employees a plan may keep hired at once (PRD §6). */
+/** Employees a plan may keep hired at once (PRD §6). MOTE never takes a seat. */
 export const seatsFor = (plan: Plan) => (plan === 'free' ? 1 : plan === 'pro' ? 6 : Infinity);
+
+let seq = 100;
+const nextId = (prefix: string) => `${prefix}-${++seq}`;
+
+const PALETTE = ['#3b6fd4', '#35c8d8', '#a855f7', '#e5a13a', '#6f9e78', '#c8443c'];
 
 type State = {
   plan: Plan;
@@ -15,6 +30,9 @@ type State = {
   trusted: string[];
   runs: Run[];
   approvals: Approval[];
+  tasks: Task[];
+  projects: Project[];
+  collaborators: Collaborator[];
   activeEmployee: string;
   widget: MoteStateName;
   discreet: boolean;
@@ -27,6 +45,16 @@ type State = {
   retire: (id: string) => void;
   toggleTrust: (id: string) => void;
   resolve: (approvalId: string, decision: 'approve' | 'deny') => void;
+
+  createTask: (input: { title: string; employeeId: string; projectId?: string }) => string;
+  createProject: (name: string) => string;
+  toggleFavourite: (taskId: string) => void;
+  sendMessage: (taskId: string, text: string) => void;
+  resolveTaskApproval: (taskId: string, messageId: string, decision: 'approved' | 'denied') => void;
+  invite: (taskId: string, email: string, role: CollabRole) => void;
+  uninvite: (taskId: string, collaboratorId: string) => void;
+  setTaskRole: (collaboratorId: string, role: CollabRole) => void;
+
   setWidget: (s: MoteStateName) => void;
   setActive: (id: string) => void;
   kill: () => void;
@@ -37,13 +65,29 @@ type State = {
   removeBlock: (pattern: string) => void;
 };
 
+/** Turn an email into a plausible display name and initials for the avatar stack. */
+const personFromEmail = (email: string) => {
+  const handle = email.split('@')[0].replace(/[._-]+/g, ' ').trim();
+  const name = handle
+    .split(' ')
+    .filter(Boolean)
+    .map((w) => w[0].toUpperCase() + w.slice(1))
+    .join(' ');
+  const parts = name.split(' ');
+  const initials = ((parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? '')).toUpperCase() || '?';
+  return { name: name || email, initials };
+};
+
 export const useMote = create<State>((set, get) => ({
   plan: 'pro',
-  hired: ['otto', 'tally'],
+  hired: ['wren', 'tally', 'marlow', 'sage'],
   trusted: ['tally'],
   runs: RUNS,
   approvals: APPROVALS,
-  activeEmployee: 'otto',
+  tasks: TASKS,
+  projects: PROJECTS,
+  collaborators: COLLABORATORS,
+  activeEmployee: 'wren',
   widget: 'needs-you',
   discreet: false,
   telemetry: false,
@@ -59,13 +103,18 @@ export const useMote = create<State>((set, get) => ({
 
   hire: (id) =>
     set((s) => {
+      if (byId(id)?.leader) return s; // MOTE is not hired, he is the one hiring.
       const seats = seatsFor(s.plan);
       if (s.hired.includes(id) || s.hired.length >= seats) return s;
       return { hired: [...s.hired, id] };
     }),
 
   retire: (id) =>
-    set((s) => ({ hired: s.hired.filter((h) => h !== id), trusted: s.trusted.filter((t) => t !== id) })),
+    set((s) =>
+      byId(id)?.leader
+        ? s
+        : { hired: s.hired.filter((h) => h !== id), trusted: s.trusted.filter((t) => t !== id) },
+    ),
 
   toggleTrust: (id) =>
     set((s) => ({
@@ -89,6 +138,126 @@ export const useMote = create<State>((set, get) => ({
       widget: decision === 'approve' ? 'done' : 'idle',
     }));
   },
+
+  createTask: ({ title, employeeId, projectId }) => {
+    const id = nextId('t');
+    const employee = byId(employeeId);
+    const routed = employeeId === 'mote';
+    set((s) => ({
+      tasks: [
+        {
+          id,
+          title,
+          employeeId,
+          projectId,
+          favourite: false,
+          status: 'working',
+          createdAt: 'Just now',
+          bucket: 'today',
+          lastAt: 'now',
+          collaborators: [],
+          messages: [
+            { id: nextId('m'), at: 'now', author: { kind: 'you' }, text: title },
+            {
+              id: nextId('m'),
+              at: 'now',
+              author: { kind: 'employee', id: employeeId },
+              text: routed
+                ? 'Got it. I will work out whose job this is and hand it over — you will see who picked it up right here.'
+                : `On it. I will check my preconditions first and tell you if anything is missing before I touch ${employee?.role.toLowerCase() ?? 'anything'} work.`,
+            },
+          ],
+        },
+        ...s.tasks,
+      ],
+      activeEmployee: routed ? s.activeEmployee : employeeId,
+      widget: 'thinking',
+    }));
+    return id;
+  },
+
+  createProject: (name) => {
+    const id = nextId('p');
+    set((s) => ({
+      projects: [...s.projects, { id, name, tint: PALETTE[s.projects.length % PALETTE.length] }],
+    }));
+    return id;
+  },
+
+  toggleFavourite: (taskId) =>
+    set((s) => ({
+      tasks: s.tasks.map((t) => (t.id === taskId ? { ...t, favourite: !t.favourite } : t)),
+    })),
+
+  sendMessage: (taskId, text) => {
+    if (!text.trim()) return;
+    set((s) => ({
+      tasks: s.tasks.map((t) => {
+        if (t.id !== taskId) return t;
+        const employee = byId(t.employeeId);
+        return {
+          ...t,
+          lastAt: 'now',
+          messages: [
+            ...t.messages,
+            { id: nextId('m'), at: 'now', author: { kind: 'you' as const }, text: text.trim() },
+            {
+              id: nextId('m'),
+              at: 'now',
+              author: { kind: 'employee' as const, id: t.employeeId },
+              text: `Understood. I will fold that into this job — ${employee?.name ?? 'I'} will post the receipt here when the step is verified.`,
+            },
+          ],
+        };
+      }),
+    }));
+  },
+
+  resolveTaskApproval: (taskId, messageId, decision) =>
+    set((s) => ({
+      tasks: s.tasks.map((t) =>
+        t.id !== taskId
+          ? t
+          : {
+              ...t,
+              status: decision === 'approved' ? 'done' : 'halted',
+              messages: t.messages.map((m) =>
+                m.id === messageId && m.approval
+                  ? { ...m, approval: { ...m.approval, resolved: decision, by: 'You' } }
+                  : m,
+              ),
+            },
+      ),
+      widget: decision === 'approved' ? 'done' : 'idle',
+    })),
+
+  invite: (taskId, email, role) => {
+    const clean = email.trim();
+    if (!clean) return;
+    const existing = get().collaborators.find((c) => c.email.toLowerCase() === clean.toLowerCase());
+    const collaborator: Collaborator =
+      existing ?? { id: nextId('c'), ...personFromEmail(clean), email: clean, role, pending: true };
+    set((s) => ({
+      collaborators: existing ? s.collaborators : [...s.collaborators, collaborator],
+      tasks: s.tasks.map((t) =>
+        t.id === taskId && !t.collaborators.includes(collaborator.id)
+          ? { ...t, collaborators: [...t.collaborators, collaborator.id] }
+          : t,
+      ),
+    }));
+  },
+
+  uninvite: (taskId, collaboratorId) =>
+    set((s) => ({
+      tasks: s.tasks.map((t) =>
+        t.id === taskId ? { ...t, collaborators: t.collaborators.filter((c) => c !== collaboratorId) } : t,
+      ),
+    })),
+
+  setTaskRole: (collaboratorId, role) =>
+    set((s) => ({
+      collaborators: s.collaborators.map((c) => (c.id === collaboratorId ? { ...c, role } : c)),
+    })),
 
   setWidget: (widget) => set({ widget }),
   setActive: (activeEmployee) => set({ activeEmployee }),

@@ -7,8 +7,8 @@ import type { Approval, Run } from '../lib/types';
 export const RUNS: Run[] = [
   {
     id: 'r-1041',
-    employeeId: 'otto',
-    skillId: 'otto.order-intake',
+    employeeId: 'wren',
+    skillId: 'wren.intake',
     title: 'Order #4471 — Brightwater Cafe',
     startedAt: 'Today, 9:12',
     shift: 'desk',
@@ -41,8 +41,8 @@ export const RUNS: Run[] = [
   },
   {
     id: 'r-1039',
-    employeeId: 'otto',
-    skillId: 'otto.order-intake',
+    employeeId: 'wren',
+    skillId: 'wren.intake',
     title: 'Order #4470 — Halden Supply',
     startedAt: 'Yesterday, 16:48',
     shift: 'desk',
@@ -67,8 +67,8 @@ export const RUNS: Run[] = [
   },
   {
     id: 'r-1038',
-    employeeId: 'scout',
-    skillId: 'scout.brief',
+    employeeId: 'marlow',
+    skillId: 'marlow.brief',
     title: 'Competitor pricing — 5 sources',
     startedAt: 'Yesterday, 11:20',
     shift: 'cloud',
@@ -85,7 +85,7 @@ export const APPROVALS: Approval[] = [
   {
     id: 'a-1',
     runId: 'r-1041',
-    employeeId: 'otto',
+    employeeId: 'wren',
     tier: 'red',
     what: 'Send the confirmation reply for Order #4471',
     detail: 'To: orders@brightwatercafe.com · Subject: Re: Order #4471 — confirmed',

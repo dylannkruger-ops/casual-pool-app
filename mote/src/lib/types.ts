@@ -22,6 +22,10 @@ export type Employee = {
   name: string;
   role: string;
   tint: string;
+  /** 4:5 head-and-torso portrait, framed to match across the team. */
+  avatar: string;
+  /** Full-figure render, where one exists. Profile pages only. */
+  portrait?: string;
   /** One line, in the employee's own voice. */
   blurb: string;
   status: EmployeeStatus;
@@ -29,6 +33,8 @@ export type Employee = {
   joining?: string;
   skills: Skill[];
   freeTier?: boolean;
+  /** MOTE. Always present, never occupies a seat, never retired. */
+  leader?: boolean;
 };
 
 export type Step = {
@@ -71,3 +77,58 @@ export type Approval = {
 };
 
 export type Plan = 'free' | 'pro' | 'studio';
+
+export type Project = { id: string; name: string; tint: string };
+
+export type CollabRole = 'viewer' | 'approver';
+
+export type Collaborator = {
+  id: string;
+  name: string;
+  email: string;
+  initials: string;
+  role: CollabRole;
+  /** Invited but not yet accepted. */
+  pending?: boolean;
+};
+
+export type Author =
+  | { kind: 'you' }
+  | { kind: 'employee'; id: string }
+  | { kind: 'collaborator'; id: string }
+  | { kind: 'system' };
+
+export type Message = {
+  id: string;
+  at: string;
+  author: Author;
+  text?: string;
+  /** An inline receipt — the same step records the work log stores. */
+  steps?: Step[];
+  /** A decision the user has to make, rendered as a crown card. */
+  approval?: {
+    what: string;
+    tier: Exclude<Tier, 'green'>;
+    resolved?: 'approved' | 'denied';
+    /** Who resolved it — the owner, or a collaborator with approve rights. */
+    by?: string;
+  };
+};
+
+export type TaskStatus = 'working' | 'waiting' | 'done' | 'halted';
+
+export type Task = {
+  id: string;
+  title: string;
+  /** Who owns the work. MOTE means "not routed yet". */
+  employeeId: string;
+  projectId?: string;
+  favourite: boolean;
+  status: TaskStatus;
+  createdAt: string;
+  /** Human-readable recency label, used to group the history list. */
+  bucket: 'today' | 'yesterday' | 'earlier';
+  lastAt: string;
+  collaborators: string[];
+  messages: Message[];
+};
