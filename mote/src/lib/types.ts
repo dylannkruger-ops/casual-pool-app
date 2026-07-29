@@ -26,6 +26,8 @@ export type Employee = {
   avatar: string;
   /** One line, in the employee's own voice. */
   blurb: string;
+  /** How a person would actually ask for this employee's work. */
+  suggest: string;
   status: EmployeeStatus;
   /** Set for onboarding employees only. */
   joining?: string;

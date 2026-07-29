@@ -35,8 +35,7 @@ export function MobileHeader({ title }: { title: string }) {
     <header className="sticky top-0 z-30 flex items-center gap-3 bg-canvas/95 px-5 pb-3 pt-5 backdrop-blur lg:hidden">
       <Avatar id="mote" size={40} />
       <div className="min-w-0 flex-1">
-        <h1 className="truncate text-[21px] font-semibold leading-tight tracking-[-.02em]">{title}</h1>
-        <p className="text-[12.5px] muted">your team</p>
+        <h1 className="truncate text-[19px] font-semibold leading-tight tracking-[-.02em]">{title}</h1>
       </div>
       <button
         onClick={() => navigate('/approvals')}
@@ -102,15 +101,25 @@ export function MobileTabBar() {
 
   return (
     <>
-      {/* Status strip: the widget's job on a phone, without pretending to drive the screen. */}
-      <div className="fixed inset-x-0 bottom-[104px] z-30 pl-4 pr-24 lg:hidden">
+      {/* One bottom stack: new-task button, status, tabs. Previously the status
+          strip floated at a fixed offset and landed on top of whatever content
+          happened to be there, which read as a bug rather than as chrome. */}
+      <div className="fixed inset-x-0 bottom-0 z-40 flex flex-col items-stretch gap-2 px-4 pb-4 lg:hidden">
+        <button
+          onClick={() => setNewTask(true)}
+          aria-label="New task"
+          className="flex h-14 w-14 items-center justify-center self-end rounded-full bg-shell-ink text-[26px] font-light text-white shadow-widget"
+        >
+          +
+        </button>
+
         {status.blocked ? (
-          <div className="flex max-w-md items-center gap-2 rounded-full bg-[#a8455a] px-4 py-2 text-[12.5px] text-white shadow-widget">
+          <div className="mx-auto flex w-full max-w-md items-center gap-2 rounded-full bg-[#a8455a] px-4 py-2 text-[12.5px] text-white shadow-widget">
             Spend cap reached — no new work starting.
           </div>
         ) : (
           widget !== 'idle' && (
-            <div className="flex max-w-md items-center gap-2.5 rounded-full bg-shell-ink px-3 py-2 text-white shadow-widget">
+            <div className="mx-auto flex w-full max-w-md items-center gap-2.5 rounded-full bg-shell-ink px-3 py-2 text-white shadow-widget">
               <Avatar id={activeEmployee} size={22} />
               <span className="truncate text-[12.5px]">
                 {widget === 'needs-you'
@@ -120,18 +129,8 @@ export function MobileTabBar() {
             </div>
           )
         )}
-      </div>
 
-      <button
-        onClick={() => setNewTask(true)}
-        aria-label="New task"
-        className="fixed bottom-[100px] right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-shell-ink text-[26px] font-light text-white shadow-widget lg:hidden"
-      >
-        +
-      </button>
-
-      <nav className="fixed inset-x-0 bottom-0 z-40 px-4 pb-4 lg:hidden">
-        <div className="mx-auto flex max-w-md items-center gap-1 rounded-[26px] border border-black/[.05] bg-white/95 p-1.5 shadow-widget backdrop-blur">
+        <nav className="mx-auto flex w-full max-w-md items-center gap-1 rounded-[26px] border border-black/[.05] bg-white/95 p-1.5 shadow-widget backdrop-blur">
           <NavLink to="/" end className={tab}>
             {({ isActive }) => (
               <>
@@ -163,8 +162,8 @@ export function MobileTabBar() {
             <TabIcon d={ICONS.more} />
             More
           </button>
-        </div>
-      </nav>
+        </nav>
+      </div>
 
       <MoreSheet open={more} onClose={() => setMore(false)} />
       <NewTaskDialog open={newTask} onClose={() => setNewTask(false)} />

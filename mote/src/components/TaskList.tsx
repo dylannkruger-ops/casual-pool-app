@@ -13,6 +13,31 @@ export const STATUS: Record<TaskStatus, { label: string; tone: 'good' | 'warn' |
   halted: { label: 'Halted', tone: 'stop' },
 };
 
+/**
+ * Quiet variant for the home page. The full row carries a star, a project dot,
+ * a status chip, a collaborator stack and two timestamps — useful when you are
+ * scanning history, pure noise under a composer.
+ */
+export function TaskRowCompact({ task }: { task: Task }) {
+  const employee = byId(task.employeeId);
+  const status = STATUS[task.status];
+  const dot =
+    task.status === 'done' ? 'bg-glow' : task.status === 'halted' ? 'bg-[#ef7d8e]' : 'bg-crown';
+
+  return (
+    <Link
+      to={`/task/${task.id}`}
+      className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition hover:bg-black/[.035]"
+    >
+      <Avatar id={task.employeeId} size={26} />
+      <span className="min-w-0 flex-1 truncate text-[14px]">{task.title}</span>
+      <span className="shrink-0 text-[12px] muted">{employee?.name}</span>
+      <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dot}`} title={status.label} />
+      <span className="w-14 shrink-0 text-right text-[12px] muted">{task.lastAt}</span>
+    </Link>
+  );
+}
+
 export function TaskRow({ task }: { task: Task }) {
   const { toggleFavourite, collaborators, projects } = useMote();
   const employee = byId(task.employeeId);

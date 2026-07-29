@@ -16,6 +16,7 @@ export const ROSTER: Employee[] = [
     tint: '#2fd463',
     avatar: '/team/mote.png',
     blurb: 'Takes the job, decides whose it is, and brings you anything that needs your yes.',
+    suggest: 'Sort out whatever needs doing this morning',
     status: 'hireable',
     leader: true,
     skills: [
@@ -36,6 +37,7 @@ export const ROSTER: Employee[] = [
     tint: '#3b6fd4',
     avatar: '/team/wren.png',
     blurb: 'Reads every new message, files what matters, drafts the reply you would have written.',
+    suggest: 'Log the new order and draft a reply',
     status: 'hireable',
     freeTier: true,
     skills: [
@@ -56,6 +58,7 @@ export const ROSTER: Employee[] = [
     tint: '#35c8d8',
     avatar: '/team/tally.png',
     blurb: 'Compares your orders against your sheet, your invoices against your bank export.',
+    suggest: 'Reconcile June against the bank export',
     status: 'hireable',
     skills: [
       {
@@ -75,6 +78,7 @@ export const ROSTER: Employee[] = [
     tint: '#e5a13a',
     avatar: '/team/marlow.png',
     blurb: 'Give Marlow a question and your sources; get back a brief with the gaps marked.',
+    suggest: 'Research what our five competitors charge',
     status: 'hireable',
     skills: [
       {
@@ -94,6 +98,7 @@ export const ROSTER: Employee[] = [
     tint: '#6f9e78',
     avatar: '/team/sage.png',
     blurb: 'Turns the week into a number, and tells you which number actually moved.',
+    suggest: 'Put together this week\'s numbers',
     status: 'hireable',
     skills: [
       {
@@ -113,6 +118,7 @@ export const ROSTER: Employee[] = [
     tint: '#c8443c',
     avatar: '/team/vance.png',
     blurb: 'Builds the quote, chases the signature, never lets a proposal go cold.',
+    suggest: 'Draft a quote for the Halden order',
     status: 'onboarding',
     joining: 'September',
     skills: [
@@ -133,6 +139,7 @@ export const ROSTER: Employee[] = [
     tint: '#a855f7',
     avatar: '/team/juno.png',
     blurb: 'Cuts the clip, writes the captions, files it where the rest of the team can find it.',
+    suggest: 'Cut and caption yesterday\'s clip',
     status: 'onboarding',
     joining: 'October',
     skills: [
@@ -153,6 +160,7 @@ export const ROSTER: Employee[] = [
     tint: '#64748b',
     avatar: '/team/rig.png',
     blurb: 'Keeps the tools talking to each other, and fixes the one that stopped.',
+    suggest: 'Check the Xero connection is still alive',
     status: 'onboarding',
     joining: 'October',
     skills: [
@@ -173,6 +181,7 @@ export const ROSTER: Employee[] = [
     tint: '#8b8f96',
     avatar: '/team/ash.png',
     blurb: '"Move this from app A to app B, forty times, without me." That is Ash\'s whole personality.',
+    suggest: 'Move last week\'s leads into the CRM',
     status: 'onboarding',
     joining: 'November',
     skills: [

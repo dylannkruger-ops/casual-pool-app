@@ -1,6 +1,5 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
-import { FaceWidget } from './components/FaceWidget';
 import { MobileHeader, MobileTabBar } from './components/MobileChrome';
 import { Home, History, ProjectView } from './routes/Home';
 import { TaskView } from './routes/TaskView';
@@ -19,7 +18,7 @@ const TITLES: [string, string][] = [
   ['/history', 'History'],
   ['/team', 'Your team'],
   ['/employee', 'Profile'],
-  ['/approvals', 'Approvals'],
+  ['/approvals', 'Needs your yes'],
   ['/connectors', 'Connectors'],
   ['/spend', 'Spend guard'],
   ['/runs', 'Work log'],
@@ -34,16 +33,22 @@ const TITLES: [string, string][] = [
 export default function App() {
   const { pathname } = useLocation();
   const title = TITLES.find(([p]) => pathname.startsWith(p))?.[1] ?? 'Home';
+  const isHome = pathname === '/';
 
   return (
     <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <MobileHeader title={title} />
-        <main className="flex-1 overflow-y-auto">
-          {/* Right gutter is reserved for the widget, which floats above everything.
-              On a phone the widget becomes a strip above the tab bar instead. */}
-          <div className="max-w-5xl px-5 py-4 pb-44 sm:px-8 lg:py-10 xl:pr-[332px]">
+        <main className="min-w-0 flex-1 overflow-y-auto">
+          {/* One comfortable reading column, centred. The widget used to float
+              over this area, so the layout reserved a 332px gutter for it; the
+              widget is docked in the sidebar now and the space came back. */}
+          <div
+            className={`mx-auto px-5 pb-52 sm:px-8 lg:pb-16 ${
+              isHome ? 'max-w-3xl py-2 lg:py-6' : 'max-w-4xl py-4 lg:py-12'
+            }`}
+          >
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/history" element={<History />} />
@@ -64,7 +69,6 @@ export default function App() {
           </div>
         </main>
       </div>
-      <FaceWidget />
       <MobileTabBar />
     </div>
   );

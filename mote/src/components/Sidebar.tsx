@@ -1,145 +1,140 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useMote } from '../store/useMote';
 import { Avatar } from './Avatar';
-import { Star } from './Star';
 import { Crown } from './Crown';
+import { DockedStatus } from './DockedStatus';
+import { AccountMenu } from './AccountMenu';
 import { NewProjectDialog, NewTaskDialog } from './dialogs';
 
-const link = ({ isActive }: { isActive: boolean }) =>
-  `flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-[13.5px] transition ${
-    isActive ? 'bg-black/[.06] font-medium text-shell-ink' : 'text-shell-ink/60 hover:bg-black/[.035]'
+const row = ({ isActive }: { isActive: boolean }) =>
+  `flex items-center justify-between gap-2 rounded-xl px-2.5 py-[7px] text-[13px] transition ${
+    isActive ? 'bg-black/[.06] font-medium text-shell-ink' : 'text-shell-ink/65 hover:bg-black/[.035]'
   }`;
 
-function SectionLabel({ children, action }: { children: string; action?: React.ReactNode }) {
+function Label({ children }: { children: string }) {
   return (
-    <div className="mb-1 mt-4 flex items-center justify-between px-3">
-      <span className="text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">{children}</span>
-      {action}
+    <div className="mb-1 mt-5 px-2.5 text-[11px] font-medium uppercase tracking-wider text-shell-ink/30">
+      {children}
     </div>
   );
 }
 
+/**
+ * The sidebar is the task history, not a feature menu. Anything you touch once
+ * a month lives behind the account button at the bottom.
+ */
 export function Sidebar() {
-  const { tasks, projects, approvals, plan, toggleFavourite } = useMote();
+  const { tasks, projects, approvals } = useMote();
   const [newTask, setNewTask] = useState(false);
   const [newProject, setNewProject] = useState(false);
+  const [query, setQuery] = useState('');
 
-  const favourites = tasks.filter((t) => t.favourite);
-  const recent = tasks.filter((t) => !t.favourite).slice(0, 5);
+  const matches = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return q ? tasks.filter((t) => t.title.toLowerCase().includes(q)) : tasks;
+  }, [tasks, query]);
+
+  const favourites = matches.filter((t) => t.favourite);
+  const rest = matches.filter((t) => !t.favourite);
 
   return (
-    <aside className="hidden h-screen w-[262px] shrink-0 flex-col overflow-y-auto border-r hairline bg-canvas px-3.5 py-5 lg:flex">
-      <div className="mb-4 flex items-center gap-2.5 px-2">
-        <Avatar id="mote" size={28} />
-        <span className="text-[15px] font-semibold tracking-[-.01em]">MOTE</span>
+    <aside className="hidden h-screen w-[268px] shrink-0 flex-col border-r hairline bg-canvas px-3 py-4 lg:flex">
+      <div className="mb-3 flex items-center gap-2.5 px-2">
+        <Avatar id="mote" size={26} />
+        <span className="text-[14.5px] font-semibold tracking-[-.01em]">MOTE</span>
       </div>
 
       <button
         onClick={() => setNewTask(true)}
-        className="mb-1 flex h-10 items-center justify-center gap-2 rounded-full bg-shell-ink text-[13.5px] font-medium text-white transition hover:bg-shell-deep"
+        className="mb-2.5 flex h-9 items-center justify-center gap-1.5 rounded-full bg-shell-ink text-[13px] font-medium text-white transition hover:bg-shell-deep"
       >
         <span className="text-[15px] leading-none">+</span> New task
       </button>
 
-      {favourites.length > 0 && (
-        <>
-          <SectionLabel>Favourites</SectionLabel>
-          <nav className="space-y-0.5">
-            {favourites.map((t) => (
-              <NavLink key={t.id} to={`/task/${t.id}`} className={link}>
-                <span className="flex min-w-0 items-center gap-2">
-                  <Avatar id={t.employeeId} size={20} />
-                  <span className="truncate">{t.title}</span>
-                </span>
-                <Star on onClick={() => toggleFavourite(t.id)} size={12} />
-              </NavLink>
-            ))}
-          </nav>
-        </>
+      <input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search tasks"
+        aria-label="Search tasks"
+        className="mb-1 h-8 rounded-full bg-black/[.04] px-3.5 text-[12.5px] placeholder:text-shell-ink/35 focus-visible:ring-1"
+      />
+
+      {approvals.length > 0 && (
+        <NavLink to="/approvals" className={row}>
+          <span className="flex items-center gap-2">
+            <Crown size={13} className="text-crown" />
+            Needs your yes
+          </span>
+          <span className="flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-crown px-1 text-[10.5px] font-semibold text-white">
+            {approvals.length}
+          </span>
+        </NavLink>
       )}
 
-      <SectionLabel>Recent</SectionLabel>
-      <nav className="space-y-0.5">
-        {recent.map((t) => (
-          <NavLink key={t.id} to={`/task/${t.id}`} className={link}>
-            <span className="flex min-w-0 items-center gap-2">
-              <Avatar id={t.employeeId} size={20} />
-              <span className="truncate">{t.title}</span>
-            </span>
-          </NavLink>
-        ))}
-        <NavLink to="/history" className={link}>
-          <span className="text-shell-ink/45">All tasks</span>
-        </NavLink>
-      </nav>
+      <div className="-mr-1 min-h-0 flex-1 overflow-y-auto pr-1">
+        {favourites.length > 0 && (
+          <>
+            <Label>Favourites</Label>
+            <nav className="space-y-0.5">
+              {favourites.map((t) => (
+                <NavLink key={t.id} to={`/task/${t.id}`} className={row}>
+                  <span className="flex min-w-0 items-center gap-2">
+                    <Avatar id={t.employeeId} size={18} />
+                    <span className="truncate">{t.title}</span>
+                  </span>
+                </NavLink>
+              ))}
+            </nav>
+          </>
+        )}
 
-      <SectionLabel
-        action={
+        <Label>{query ? 'Results' : 'Recent'}</Label>
+        <nav className="space-y-0.5">
+          {rest.slice(0, 8).map((t) => (
+            <NavLink key={t.id} to={`/task/${t.id}`} className={row}>
+              <span className="flex min-w-0 items-center gap-2">
+                <Avatar id={t.employeeId} size={18} />
+                <span className="truncate">{t.title}</span>
+              </span>
+            </NavLink>
+          ))}
+          {matches.length === 0 && (
+            <p className="px-2.5 py-2 text-[12.5px] muted">Nothing matches “{query}”.</p>
+          )}
+          <NavLink to="/history" className={row}>
+            <span className="text-shell-ink/45">All tasks</span>
+          </NavLink>
+        </nav>
+
+        <div className="mb-1 mt-5 flex items-center justify-between px-2.5">
+          <span className="text-[11px] font-medium uppercase tracking-wider text-shell-ink/30">
+            Projects
+          </span>
           <button
             onClick={() => setNewProject(true)}
-            className="text-[15px] leading-none text-shell-ink/35 hover:text-shell-ink"
+            className="text-[14px] leading-none text-shell-ink/30 hover:text-shell-ink"
             aria-label="New project"
             title="New project"
           >
             +
           </button>
-        }
-      >
-        Projects
-      </SectionLabel>
-      <nav className="space-y-0.5">
-        {projects.map((p) => (
-          <NavLink key={p.id} to={`/project/${p.id}`} className={link}>
-            <span className="flex min-w-0 items-center gap-2.5">
-              <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: p.tint }} />
-              <span className="truncate">{p.name}</span>
-            </span>
-          </NavLink>
-        ))}
-      </nav>
+        </div>
+        <nav className="space-y-0.5">
+          {projects.map((p) => (
+            <NavLink key={p.id} to={`/project/${p.id}`} className={row}>
+              <span className="flex min-w-0 items-center gap-2.5">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: p.tint }} />
+                <span className="truncate">{p.name}</span>
+              </span>
+            </NavLink>
+          ))}
+        </nav>
+      </div>
 
-      <SectionLabel>Workspace</SectionLabel>
-      <nav className="space-y-0.5">
-        <NavLink to="/approvals" className={link}>
-          <span className="flex items-center gap-2">
-            <Crown size={13} className="text-crown" />
-            Approvals
-          </span>
-          {approvals.length > 0 && (
-            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-crown px-1.5 text-[11px] font-semibold text-white">
-              {approvals.length}
-            </span>
-          )}
-        </NavLink>
-        <NavLink to="/team" className={link}>
-          Your team
-        </NavLink>
-        <NavLink to="/connectors" className={link}>
-          Connectors
-        </NavLink>
-        <NavLink to="/spend" className={link}>
-          Spend guard
-        </NavLink>
-        <NavLink to="/runs" className={link}>
-          Work log
-        </NavLink>
-        <NavLink to="/performance" className={link}>
-          Performance
-        </NavLink>
-        <NavLink to="/trust" className={link}>
-          Privacy
-        </NavLink>
-      </nav>
-
-      <div className="mt-auto space-y-0.5 pt-5">
-        <NavLink to="/settings" className={link}>
-          Settings
-        </NavLink>
-        <NavLink to="/plan" className={link}>
-          <span>Plan</span>
-          <span className="text-[11px] capitalize text-shell-ink/40">{plan}</span>
-        </NavLink>
+      <div className="mt-3 space-y-2 border-t hairline pt-3">
+        <DockedStatus />
+        <AccountMenu />
       </div>
 
       <NewTaskDialog open={newTask} onClose={() => setNewTask(false)} />

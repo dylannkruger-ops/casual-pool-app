@@ -35,6 +35,29 @@ npm run build    # tsc -b && vite build
 | Spend guard | `/spend` | A hard ceiling on monthly model spend, and where it went |
 | Settings | `/settings` | Redaction blocklist, retention, telemetry opt-in, discreet mode |
 
+## The shape of the app
+
+Someone opens MOTE for one of three reasons: to **ask for something**, to **say
+yes to something**, or to **check it worked**. The shell is built around exactly
+those, and everything else is one click further away.
+
+- **Home is a front door, not a dashboard.** A greeting, one large composer, and
+  the team you can hand the job to. Pressing Enter starts the task — no dialog in
+  the way. Suggestions are phrased the way a person would ask ("Reconcile June
+  against the bank export"), pulled from each hired employee's `suggest` line.
+- **The sidebar is task history, not a feature menu.** New task, search, anything
+  waiting on you, your projects, and your recent tasks. That's it.
+- **One account menu** holds team, connectors, spend, work log, performance,
+  privacy, settings and plan — nine destinations that used to sit in the rail at
+  the same volume as the work itself.
+- **The widget is docked, not floating.** In the shipped product it sits over
+  *other* apps; over MOTE's own window it was just covering content, and the
+  layout had to reserve a 332px gutter to avoid it. Docked into the sidebar it
+  keeps its job — which employee, what state, kill switch — and the content column
+  is centred and comfortable again.
+- **One interruption only.** Approvals get a single prominent card. Nothing else
+  competes.
+
 ## Mobile
 
 Below `lg` the sidebar and the face widget disappear and Sintra's shape takes
