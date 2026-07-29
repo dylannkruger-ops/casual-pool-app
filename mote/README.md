@@ -57,6 +57,10 @@ those, and everything else is one click further away.
   is centred and comfortable again.
 - **One interruption only.** Approvals get a single prominent card. Nothing else
   competes.
+- **⌘K reaches anything.** One palette searches tasks, people and pages — and if
+  you type a sentence instead, the first option is to start it as a job. It
+  replaced a rail-only search box, so there is one search rather than two. The
+  logo goes home; on a phone the header carries the same search.
 
 ## Mobile
 

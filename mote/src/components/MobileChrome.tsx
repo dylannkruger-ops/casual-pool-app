@@ -29,7 +29,7 @@ const tab = ({ isActive }: { isActive: boolean }) =>
 
 /** Sintra-style header: who you are, where you are, and one actions button. */
 export function MobileHeader({ title }: { title: string }) {
-  const { approvals } = useMote();
+  const { approvals, setPalette } = useMote();
   const navigate = useNavigate();
   return (
     <header className="sticky top-0 z-30 flex items-center gap-3 bg-canvas/95 px-5 pb-3 pt-5 backdrop-blur lg:hidden">
@@ -37,6 +37,16 @@ export function MobileHeader({ title }: { title: string }) {
       <div className="min-w-0 flex-1">
         <h1 className="truncate text-[19px] font-semibold leading-tight tracking-[-.02em]">{title}</h1>
       </div>
+      <button
+        onClick={() => setPalette(true)}
+        aria-label="Search"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-shell-ink/50 shadow-card"
+      >
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3.5-3.5" />
+        </svg>
+      </button>
       <button
         onClick={() => navigate('/approvals')}
         aria-label="Approvals"

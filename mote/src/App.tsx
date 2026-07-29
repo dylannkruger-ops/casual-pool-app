@@ -1,6 +1,7 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { MobileHeader, MobileTabBar } from './components/MobileChrome';
+import { CommandPalette } from './components/CommandPalette';
 import { Home, History, ProjectView } from './routes/Home';
 import { TaskView } from './routes/TaskView';
 import { Team } from './routes/Team';
@@ -70,6 +71,7 @@ export default function App() {
         </main>
       </div>
       <MobileTabBar />
+      <CommandPalette />
     </div>
   );
 }

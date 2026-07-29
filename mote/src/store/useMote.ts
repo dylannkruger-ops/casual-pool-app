@@ -42,6 +42,8 @@ type State = {
   /** Model spend so far this month, in US$, by employee. */
   spendByEmployee: Record<string, number>;
   activeEmployee: string;
+  /** ⌘K — one way to reach anything. */
+  paletteOpen: boolean;
   widget: MoteStateName;
   discreet: boolean;
   telemetry: boolean;
@@ -72,6 +74,7 @@ type State = {
   setPerRunCeiling: (usd: number) => void;
   setAtCap: (b: CapBehaviour) => void;
 
+  setPalette: (open: boolean) => void;
   setWidget: (s: MoteStateName) => void;
   setActive: (id: string) => void;
   kill: () => void;
@@ -108,6 +111,7 @@ export const useMote = create<State>((set, get) => ({
   spend: { monthlyCapUsd: 40, alertAtPct: 80, perRunCeilingUsd: 0.5, atCap: 'ask' },
   spendByEmployee: { wren: 11.4, tally: 7.2, marlow: 9.8, sage: 3.1, mote: 1.2 },
   activeEmployee: 'wren',
+  paletteOpen: false,
   widget: 'needs-you',
   discreet: false,
   telemetry: false,
@@ -313,6 +317,7 @@ export const useMote = create<State>((set, get) => ({
   setPerRunCeiling: (perRunCeilingUsd) => set((s) => ({ spend: { ...s.spend, perRunCeilingUsd } })),
   setAtCap: (atCap) => set((s) => ({ spend: { ...s.spend, atCap } })),
 
+  setPalette: (paletteOpen) => set({ paletteOpen }),
   setWidget: (widget) => set({ widget }),
   setActive: (activeEmployee) => set({ activeEmployee }),
   kill: () => set({ widget: 'idle' }),

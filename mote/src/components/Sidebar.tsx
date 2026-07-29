@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { useMote } from '../store/useMote';
 import { Avatar } from './Avatar';
 import { Crown } from './Crown';
@@ -25,25 +25,18 @@ function Label({ children }: { children: string }) {
  * a month lives behind the account button at the bottom.
  */
 export function Sidebar() {
-  const { tasks, projects, approvals } = useMote();
+  const { tasks, projects, approvals, setPalette } = useMote();
   const [newTask, setNewTask] = useState(false);
   const [newProject, setNewProject] = useState(false);
-  const [query, setQuery] = useState('');
-
-  const matches = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return q ? tasks.filter((t) => t.title.toLowerCase().includes(q)) : tasks;
-  }, [tasks, query]);
-
-  const favourites = matches.filter((t) => t.favourite);
-  const rest = matches.filter((t) => !t.favourite);
+  const favourites = tasks.filter((t) => t.favourite);
+  const rest = tasks.filter((t) => !t.favourite);
 
   return (
     <aside className="hidden h-screen w-[268px] shrink-0 flex-col border-r hairline bg-canvas px-3 py-4 lg:flex">
-      <div className="mb-3 flex items-center gap-2.5 px-2">
+      <Link to="/" className="mb-3 flex items-center gap-2.5 rounded-xl px-2 py-1 transition hover:bg-black/[.035]">
         <Avatar id="mote" size={26} />
         <span className="text-[14.5px] font-semibold tracking-[-.01em]">MOTE</span>
-      </div>
+      </Link>
 
       <button
         onClick={() => setNewTask(true)}
@@ -52,13 +45,14 @@ export function Sidebar() {
         <span className="text-[15px] leading-none">+</span> New task
       </button>
 
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search tasks"
-        aria-label="Search tasks"
-        className="mb-1 h-8 rounded-full bg-black/[.04] px-3.5 text-[12.5px] placeholder:text-shell-ink/35 focus-visible:ring-1"
-      />
+      {/* One search for the whole app, rather than a rail filter plus a jump box. */}
+      <button
+        onClick={() => setPalette(true)}
+        className="mb-1 flex h-8 items-center justify-between rounded-full bg-black/[.04] px-3.5 text-[12.5px] text-shell-ink/45 transition hover:bg-black/[.07]"
+      >
+        Search
+        <span className="text-[11px] text-shell-ink/35">⌘K</span>
+      </button>
 
       {approvals.length > 0 && (
         <NavLink to="/approvals" className={row}>
@@ -89,7 +83,7 @@ export function Sidebar() {
           </>
         )}
 
-        <Label>{query ? 'Results' : 'Recent'}</Label>
+        <Label>Recent</Label>
         <nav className="space-y-0.5">
           {rest.slice(0, 8).map((t) => (
             <NavLink key={t.id} to={`/task/${t.id}`} className={row}>
@@ -99,9 +93,6 @@ export function Sidebar() {
               </span>
             </NavLink>
           ))}
-          {matches.length === 0 && (
-            <p className="px-2.5 py-2 text-[12.5px] muted">Nothing matches “{query}”.</p>
-          )}
           <NavLink to="/history" className={row}>
             <span className="text-shell-ink/45">All tasks</span>
           </NavLink>
