@@ -32,6 +32,7 @@ npm run build    # tsc -b && vite build
 | Privacy | `/trust` | The eight commitments, each carrying its own exceptions |
 | Plan | `/plan` | Free / Pro / Studio, with unshipped features labelled rather than sold |
 | Connectors | `/connectors` | App connectors and your own MCP servers, each showing what it may do |
+| Plans | `/plan` | Three cards, each stating its own case — no comparison table |
 | Spend guard | `/spend` | A hard ceiling on monthly model spend, and where it went |
 | Settings | `/settings` | Redaction blocklist, retention, telemetry opt-in, discreet mode |
 
@@ -57,6 +58,11 @@ those, and everything else is one click further away.
   is centred and comfortable again.
 - **One interruption only.** Approvals get a single prominent card. Nothing else
   competes.
+- **No comparison tables.** Plans and performance were the two pages built as
+  wide grids, and they were the only things that had to scroll sideways on a
+  phone. Plans is three cards that each state their own case; performance is a
+  row per skill with the 95% gate drawn on the bar, so "above the bar or not" is
+  answerable without reading a number.
 - **⌘K reaches anything.** One palette searches tasks, people and pages — and if
   you type a sentence instead, the first option is to start it as a job. It
   replaced a rail-only search box, so there is one search rather than two. The

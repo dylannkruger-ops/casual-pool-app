@@ -56,27 +56,41 @@ export function Trust() {
         sub="MOTE works on your screen, so it is built to keep your screen to yourself. Each commitment carries its own exceptions — there are no footnotes elsewhere."
       />
 
-      <div className="grid gap-4 2xl:grid-cols-2">
+      {/* One readable column, not a two-column grid of cards. These are eight
+          paragraphs of policy; side by side they became a wall to scan rather
+          than something anyone would read. */}
+      <Card className="max-w-2xl overflow-hidden">
         {COMMITMENTS.map((c, i) => (
-          <Card key={c.title} className="p-5">
-            <div className="flex items-baseline gap-2.5">
-              <span className="text-[12px] tabular-nums text-shell-ink/25">{i + 1}</span>
-              <h3 className="text-[15px] font-semibold tracking-tight">{c.title}</h3>
+          <section key={c.title} className="border-b hairline px-5 py-5 last:border-0">
+            <div className="flex gap-3">
+              <span className="mt-[3px] w-4 shrink-0 text-[12px] tabular-nums text-shell-ink/25">
+                {i + 1}
+              </span>
+              <div className="min-w-0">
+                <h2 className="text-[14.5px] font-semibold tracking-tight">{c.title}</h2>
+                <p className="mt-1.5 text-[13.5px] leading-relaxed text-shell-ink/70">{c.body}</p>
+
+                {c.exceptions && (
+                  <ul className="mt-3 space-y-2 rounded-xl bg-canvas-sunk px-4 py-3">
+                    {c.exceptions.map((e) => (
+                      <li key={e} className="flex gap-2.5 text-[12.5px] leading-relaxed text-shell-ink/65">
+                        <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-crown" />
+                        {e}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
-            <p className="mt-2 text-[13.5px] leading-relaxed text-shell-ink/70">{c.body}</p>
-            {c.exceptions && (
-              <ul className="mt-3 space-y-2 border-t hairline pt-3">
-                {c.exceptions.map((e) => (
-                  <li key={e} className="flex gap-2.5 text-[13px] text-shell-ink/60">
-                    <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-crown" />
-                    {e}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Card>
+          </section>
         ))}
-      </div>
+      </Card>
+
+      <p className="mt-5 max-w-2xl text-[13px] muted">
+        The full threat model lists what MOTE defends against and what it honestly cannot —
+        including the one that matters most: anyone with your unlocked session already has your
+        powers.
+      </p>
     </>
   );
 }

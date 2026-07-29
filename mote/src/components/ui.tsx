@@ -17,7 +17,7 @@ export function Button({
   title?: string;
 }) {
   const base =
-    'inline-flex items-center justify-center gap-2 rounded-full font-medium transition disabled:opacity-40 disabled:cursor-not-allowed';
+    'inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium transition disabled:opacity-40 disabled:cursor-not-allowed';
   const sizes = size === 'sm' ? 'h-8 px-3.5 text-[13px]' : 'h-10 px-5 text-sm';
   const variants = {
     primary: 'bg-shell-ink text-white hover:bg-shell-deep',
