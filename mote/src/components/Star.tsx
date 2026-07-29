@@ -18,7 +18,7 @@ export function Star({
       aria-label={on ? 'Remove from favourites' : 'Add to favourites'}
       title={on ? 'Remove from favourites' : 'Add to favourites'}
       className={`inline-flex items-center justify-center rounded-lg p-1 transition ${
-        on ? 'text-crown' : 'text-shell-ink/25 hover:text-shell-ink/50'
+        on ? 'text-crown' : 'text-ink/25 hover:text-ink/50'
       }`}
     >
       <svg viewBox="0 0 24 24" width={size} height={size} fill={on ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8">

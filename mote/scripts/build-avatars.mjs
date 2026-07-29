@@ -51,3 +51,78 @@ for (const c of SOLO) {
 }
 
 console.log('avatars written to', OUT);
+
+/**
+ * The renders sit on white. On a dark UI that reads as a glowing white tile, so
+ * the background is flood-filled to transparent from the edges inward — the
+ * flood stops at the character, which keeps Sage's white shirt and Juno's
+ * clapperboard intact where a plain "white = transparent" threshold would eat
+ * them.
+ */
+async function cutout(file) {
+  const img = sharp(file).ensureAlpha();
+  const { width, height } = await img.metadata();
+  const buf = await img.raw().toBuffer();
+  const n = width * height;
+  const clear = new Uint8Array(n);
+  const stack = [];
+
+  const isBg = (i) => {
+    const p = i * 4;
+    return buf[p] >= 228 && buf[p + 1] >= 228 && buf[p + 2] >= 228;
+  };
+  const push = (i) => {
+    if (!clear[i] && isBg(i)) {
+      clear[i] = 1;
+      stack.push(i);
+    }
+  };
+
+  for (let x = 0; x < width; x++) {
+    push(x);
+    push((height - 1) * width + x);
+  }
+  for (let y = 0; y < height; y++) {
+    push(y * width);
+    push(y * width + width - 1);
+  }
+
+  while (stack.length) {
+    const i = stack.pop();
+    const x = i % width;
+    const y = (i / width) | 0;
+    if (x > 0) push(i - 1);
+    if (x < width - 1) push(i + 1);
+    if (y > 0) push(i - width);
+    if (y < height - 1) push(i + width);
+  }
+
+  // Soften the cut so the edge does not alias against a dark background.
+  for (let i = 0; i < n; i++) {
+    if (clear[i]) {
+      buf[i * 4 + 3] = 0;
+      continue;
+    }
+    const p = i * 4;
+    const lum = (buf[p] + buf[p + 1] + buf[p + 2]) / 3;
+    if (lum > 232) {
+      const x = i % width;
+      const y = (i / width) | 0;
+      const touchesCleared =
+        (x > 0 && clear[i - 1]) ||
+        (x < width - 1 && clear[i + 1]) ||
+        (y > 0 && clear[i - width]) ||
+        (y < height - 1 && clear[i + width]);
+      if (touchesCleared) buf[p + 3] = Math.round(255 * Math.max(0, (250 - lum) / 18));
+    }
+  }
+
+  await sharp(buf, { raw: { width, height, channels: 4 } })
+    .png({ compressionLevel: 9 })
+    .toFile(file);
+}
+
+for (const id of [...LINEUP_HEADS.map((c) => c.id), ...SOLO.map((c) => c.id)]) {
+  await cutout(`${OUT}${id}.png`);
+}
+console.log('backgrounds cut out');

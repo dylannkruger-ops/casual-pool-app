@@ -55,7 +55,7 @@ export function NewTaskDialog({ open, onClose, projectId }: { open: boolean; onC
           rows={3}
           aria-label="What needs doing?"
           placeholder="Log the new Brightwater order and draft the confirmation"
-          className="w-full rounded-xl border border-black/[.12] bg-white px-3.5 py-2.5 text-[13.5px] placeholder:text-shell-ink/30"
+          className="w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-[13.5px] placeholder:text-ink/30"
         />
       </Field>
 
@@ -66,7 +66,7 @@ export function NewTaskDialog({ open, onClose, projectId }: { open: boolean; onC
               key={e.id}
               onClick={() => setAssignee(e.id)}
               className={`flex items-center gap-2 rounded-full border py-1 pl-1 pr-3 text-[13px] transition ${
-                assignee === e.id ? 'border-shell-ink bg-shell-ink text-white' : 'border-black/[.12] hover:bg-canvas-sunk'
+                assignee === e.id ? 'border-ink bg-btn text-btn-ink' : 'border-line hover:bg-sunk'
               }`}
             >
               <Avatar id={e.id} size={24} />
@@ -183,7 +183,7 @@ export function InviteDialog({ open, onClose, taskId }: { open: boolean; onClose
           value={role}
           aria-label="Permission"
           onChange={(e) => setRole(e.target.value as CollabRole)}
-          className="h-10 shrink-0 rounded-xl border border-black/[.12] bg-white px-3 text-[13px]"
+          className="h-10 shrink-0 rounded-xl border border-line bg-surface px-3 text-[13px]"
         >
           <option value="viewer">Can view</option>
           <option value="approver">Can approve</option>
@@ -196,9 +196,9 @@ export function InviteDialog({ open, onClose, taskId }: { open: boolean; onClose
       {onTask.length === 0 ? (
         <p className="text-[13px] muted">Nobody else is on this task yet.</p>
       ) : (
-        <div className="rounded-xl border border-black/[.07]">
+        <div className="rounded-xl border border-line">
           {onTask.map((c) => (
-            <div key={c.id} className="flex items-center gap-3 border-b border-black/[.06] px-3.5 py-3 last:border-0">
+            <div key={c.id} className="flex items-center gap-3 border-b border-line px-3.5 py-3 last:border-0">
               <PersonAvatar initials={c.initials} pending={c.pending} />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 text-[13.5px] font-medium">
@@ -211,14 +211,14 @@ export function InviteDialog({ open, onClose, taskId }: { open: boolean; onClose
                 value={c.role}
                 aria-label={`Permission for ${c.name}`}
                 onChange={(e) => setTaskRole(c.id, e.target.value as CollabRole)}
-                className="h-8 rounded-lg border border-black/[.12] bg-white px-2 text-[12.5px]"
+                className="h-8 rounded-lg border border-line bg-surface px-2 text-[12.5px]"
               >
                 <option value="viewer">Can view</option>
                 <option value="approver">Can approve</option>
               </select>
               <button
                 onClick={() => uninvite(taskId, c.id)}
-                className="rounded-lg px-2 py-1 text-[12.5px] text-shell-ink/40 hover:text-shell-ink"
+                className="rounded-lg px-2 py-1 text-[12.5px] text-ink/40 hover:text-ink"
               >
                 Remove
               </button>

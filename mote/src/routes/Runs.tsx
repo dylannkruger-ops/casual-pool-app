@@ -32,12 +32,12 @@ export function Runs() {
         }
       />
 
-      <Card className="divide-y divide-black/[.06]">
+      <Card className="divide-y divide-line">
         {runs.map((r) => {
           const e = byId(r.employeeId);
           const o = OUTCOME[r.outcome];
           return (
-            <Link key={r.id} to={`/runs/${r.id}`} className="flex items-center gap-4 px-5 py-4 hover:bg-canvas-sunk/60">
+            <Link key={r.id} to={`/runs/${r.id}`} className="flex items-center gap-4 px-5 py-4 hover:bg-sunk/60">
               <MotePill tint={e?.tint} />
               <div className="min-w-0 flex-1">
                 <div className="truncate text-[14px] font-medium">{r.title}</div>
@@ -64,7 +64,7 @@ export function RunDetail() {
 
   return (
     <>
-      <Link to="/runs" className="mb-4 inline-block text-[13px] muted hover:text-shell-ink">
+      <Link to="/runs" className="mb-4 inline-block text-[13px] muted hover:text-ink">
         ← Work log
       </Link>
       <PageHead
@@ -76,7 +76,7 @@ export function RunDetail() {
       <Card className="overflow-hidden">
         {run.steps.map((s) => (
           <div key={s.n} className="flex gap-4 border-b hairline px-5 py-4 last:border-0">
-            <span className="mt-0.5 w-5 shrink-0 text-[12.5px] tabular-nums text-shell-ink/30">
+            <span className="mt-0.5 w-5 shrink-0 text-[12.5px] tabular-nums text-ink/30">
               {s.n}
             </span>
 
@@ -89,7 +89,7 @@ export function RunDetail() {
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-baseline gap-x-2.5">
                 <span className="font-mono text-[13px] font-medium">{s.action}</span>
-                <span className="text-[13.5px] text-shell-ink/75">{s.target}</span>
+                <span className="text-[13.5px] text-ink/75">{s.target}</span>
               </div>
 
               <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
@@ -101,7 +101,7 @@ export function RunDetail() {
               </div>
 
               {s.halt && (
-                <div className="mt-3 rounded-xl bg-canvas-sunk px-4 py-3 text-[12.5px]">
+                <div className="mt-3 rounded-xl bg-sunk px-4 py-3 text-[12.5px]">
                   <p>
                     <span className="muted">Expected </span>
                     {s.halt.expected}
@@ -110,7 +110,7 @@ export function RunDetail() {
                     <span className="muted">Observed </span>
                     {s.halt.observed}
                   </p>
-                  <p className="mt-2 text-shell-ink/60">
+                  <p className="mt-2 text-ink/60">
                     One retry with an alternate strategy also failed, so {e?.name} stopped here rather
                     than guessing.
                   </p>

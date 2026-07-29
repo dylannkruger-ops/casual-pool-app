@@ -22,7 +22,7 @@ export function Settings() {
 
       <div className="grid gap-4 2xl:grid-cols-2">
         <Card className="px-5 py-1">
-          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-ink/35">
             The widget
           </div>
           <Row
@@ -38,7 +38,7 @@ export function Settings() {
         </Card>
 
         <Card className="px-5 py-1">
-          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-ink/35">
             Data
           </div>
           <Row
@@ -48,7 +48,7 @@ export function Settings() {
               <select
                 value={retentionDays}
                 onChange={(e) => setRetention(Number(e.target.value))}
-                className="h-9 rounded-lg border border-black/[.10] bg-white px-3 text-[13px]"
+                className="h-9 rounded-lg border border-line bg-surface px-3 text-[13px]"
               >
                 {[7, 14, 30, 90].map((d) => (
                   <option key={d} value={d}>
@@ -85,7 +85,7 @@ export function Settings() {
         </Card>
 
         <Card className="px-5 py-1 2xl:col-span-2">
-          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-ink/35">
             Never look here
           </div>
           <div className="py-4">
@@ -97,12 +97,12 @@ export function Settings() {
               {blocklist.map((b) => (
                 <span
                   key={b}
-                  className="inline-flex items-center gap-2 rounded-full bg-canvas-sunk px-3 py-1.5 text-[12.5px]"
+                  className="inline-flex items-center gap-2 rounded-full bg-sunk px-3 py-1.5 text-[12.5px]"
                 >
                   <span className="font-mono">{b}</span>
                   <button
                     onClick={() => removeBlock(b)}
-                    className="text-shell-ink/35 hover:text-shell-ink"
+                    className="text-ink/35 hover:text-ink"
                     aria-label={`Remove ${b}`}
                   >
                     ×
@@ -122,7 +122,7 @@ export function Settings() {
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 placeholder="app name or *.example.com"
-                className="h-10 flex-1 rounded-full border border-black/[.10] bg-white px-4 text-[13.5px] placeholder:text-shell-ink/30"
+                className="h-10 flex-1 rounded-full border border-line bg-surface px-4 text-[13.5px] placeholder:text-ink/30"
               />
               <Button size="sm">Add</Button>
             </form>
@@ -130,7 +130,7 @@ export function Settings() {
         </Card>
 
         <Card className="px-5 py-1 2xl:col-span-2">
-          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-ink/35">
             This machine
           </div>
           <Row title="Desk shift" sub="Runs execute here, one at a time. Touch the mouse or keyboard and the run pauses." right={<Chip tone="good">Ready</Chip>} />

@@ -33,7 +33,7 @@ export function Avatar({
   return (
     <span
       title={e.name}
-      className={`relative inline-block shrink-0 overflow-hidden bg-canvas-sunk ${className}`}
+      className={`relative inline-block shrink-0 overflow-hidden bg-sunk ${className}`}
       style={{
         width: size,
         height: size,
@@ -62,7 +62,7 @@ export function PersonAvatar({
     <span
       title={title}
       className={`inline-flex shrink-0 items-center justify-center rounded-full font-medium ${
-        pending ? 'border border-dashed border-black/25 bg-white text-shell-ink/45' : 'bg-shell-ink text-white'
+        pending ? 'border border-dashed border-line bg-surface text-ink/45' : 'bg-btn text-btn-ink'
       }`}
       style={{ width: size, height: size, fontSize: Math.round(size * 0.38) }}
     >
@@ -83,7 +83,7 @@ export function AvatarStack({
   return (
     <span className="flex items-center">
       {people.slice(0, 4).map((p, i) => (
-        <span key={p.id} className="rounded-full ring-2 ring-white" style={{ marginLeft: i === 0 ? 0 : -8 }}>
+        <span key={p.id} className="rounded-full ring-2 ring-surface" style={{ marginLeft: i === 0 ? 0 : -8 }}>
           <PersonAvatar initials={p.initials} size={size} pending={p.pending} title={p.name} />
         </span>
       ))}

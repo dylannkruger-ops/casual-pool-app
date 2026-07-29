@@ -20,10 +20,10 @@ export function Button({
     'inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium transition disabled:opacity-40 disabled:cursor-not-allowed';
   const sizes = size === 'sm' ? 'h-8 px-3.5 text-[13px]' : 'h-10 px-5 text-sm';
   const variants = {
-    primary: 'bg-shell-ink text-white hover:bg-shell-deep',
-    ghost: 'border border-black/[.10] bg-white hover:bg-canvas-sunk',
-    quiet: 'text-shell-ink/70 hover:text-shell-ink hover:bg-black/[.04]',
-    danger: 'border border-black/[.10] bg-white text-shell-ink/80 hover:bg-canvas-sunk',
+    primary: 'bg-btn text-btn-ink hover:opacity-90',
+    ghost: 'border border-line bg-surface hover:bg-sunk',
+    quiet: 'text-ink/70 hover:text-ink hover:bg-hover',
+    danger: 'border border-line bg-surface text-ink/80 hover:bg-sunk',
   }[variant];
   return (
     <button className={`${base} ${sizes} ${variants}`} onClick={onClick} disabled={disabled} title={title}>
@@ -46,11 +46,11 @@ export function Chip({
   // Explicit tints rather than opacity modifiers — the 12% washes were too
   // faint to read as chips at all.
   const tones = {
-    neutral: 'bg-black/[.05] text-shell-ink/70',
-    good: 'bg-[#dcf5e6] text-[#1a7a41]',
-    warn: 'bg-[#faeecd] text-[#8a6a12]',
-    stop: 'bg-[#fbdfe5] text-[#a8455a]',
-    quiet: 'bg-transparent text-shell-ink/45 border border-black/[.08]',
+    neutral: 'bg-hover text-ink/70',
+    good: 'bg-[#dcf5e6] text-[#1a7a41] dark:bg-[#16351f] dark:text-[#7fe0a3]',
+    warn: 'bg-[#faeecd] text-[#8a6a12] dark:bg-[#38290c] dark:text-[#e9c66a]',
+    stop: 'bg-[#fbdfe5] text-[#a8455a] dark:bg-[#3a1a22] dark:text-[#f0a0b0]',
+    quiet: 'bg-transparent text-ink/45 border border-line',
   }[tone];
   return (
     <span
@@ -77,7 +77,7 @@ const LAYER_LABEL: Record<Layer, string> = {
 /** Which of the three layers did the work — a tracked reliability metric (§5.4). */
 export function LayerChip({ layer }: { layer: Layer }) {
   return (
-    <span className="inline-flex items-center gap-1.5 text-[11.5px] text-shell-ink/45">
+    <span className="inline-flex items-center gap-1.5 text-[11.5px] text-ink/45">
       <span
         className="h-1.5 w-1.5 rounded-full"
         style={{
@@ -109,11 +109,11 @@ export function Toggle({
       aria-label={label}
       title={locked ? lockedReason : label}
       className={`relative h-6 w-10 shrink-0 rounded-full transition ${
-        on ? 'bg-shell-ink' : 'bg-black/[.14]'
+        on ? 'bg-btn' : 'bg-line'
       } ${locked ? 'cursor-not-allowed opacity-60' : ''}`}
     >
       <span
-        className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all ${
+        className={`absolute top-0.5 h-5 w-5 rounded-full bg-surface shadow transition-all ${
           on ? 'left-[1.125rem]' : 'left-0.5'
         }`}
       />

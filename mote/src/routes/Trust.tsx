@@ -63,17 +63,17 @@ export function Trust() {
         {COMMITMENTS.map((c, i) => (
           <section key={c.title} className="border-b hairline px-5 py-5 last:border-0">
             <div className="flex gap-3">
-              <span className="mt-[3px] w-4 shrink-0 text-[12px] tabular-nums text-shell-ink/25">
+              <span className="mt-[3px] w-4 shrink-0 text-[12px] tabular-nums text-ink/25">
                 {i + 1}
               </span>
               <div className="min-w-0">
                 <h2 className="text-[14.5px] font-semibold tracking-tight">{c.title}</h2>
-                <p className="mt-1.5 text-[13.5px] leading-relaxed text-shell-ink/70">{c.body}</p>
+                <p className="mt-1.5 text-[13.5px] leading-relaxed text-ink/70">{c.body}</p>
 
                 {c.exceptions && (
-                  <ul className="mt-3 space-y-2 rounded-xl bg-canvas-sunk px-4 py-3">
+                  <ul className="mt-3 space-y-2 rounded-xl bg-sunk px-4 py-3">
                     {c.exceptions.map((e) => (
-                      <li key={e} className="flex gap-2.5 text-[12.5px] leading-relaxed text-shell-ink/65">
+                      <li key={e} className="flex gap-2.5 text-[12.5px] leading-relaxed text-ink/65">
                         <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-crown" />
                         {e}
                       </li>

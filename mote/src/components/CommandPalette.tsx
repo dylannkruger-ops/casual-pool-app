@@ -154,13 +154,13 @@ export function CommandPalette() {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-start justify-center bg-shell-ink/25 p-4 pt-[12vh]">
+    <div className="fixed inset-0 z-[60] flex items-start justify-center bg-ink/25 p-4 pt-[12vh]">
       <div className="absolute inset-0" onClick={() => setPalette(false)} aria-hidden />
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Search and commands"
-        className="relative w-full max-w-[560px] overflow-hidden rounded-2xl bg-white shadow-widget"
+        className="relative w-full max-w-[560px] overflow-hidden rounded-2xl bg-surface shadow-widget"
       >
         <input
           autoFocus
@@ -169,7 +169,7 @@ export function CommandPalette() {
           onKeyDown={onKeyDown}
           placeholder="Search, or describe a job…"
           aria-label="Search, or describe a job"
-          className="h-14 w-full border-b hairline px-5 text-[15px] placeholder:text-shell-ink/30 focus-visible:ring-0"
+          className="h-14 w-full border-b hairline px-5 text-[15px] placeholder:text-ink/30 focus-visible:ring-0"
         />
 
         <div ref={listRef} className="max-h-[52vh] overflow-y-auto py-1.5">
@@ -182,7 +182,7 @@ export function CommandPalette() {
               onMouseEnter={() => setCursor(i)}
               onClick={it.run}
               className={`flex w-full items-center gap-3 px-4 py-2.5 text-left transition ${
-                i === cursor ? 'bg-canvas-sunk' : ''
+                i === cursor ? 'bg-sunk' : ''
               }`}
             >
               {it.employeeId ? (
@@ -192,7 +192,7 @@ export function CommandPalette() {
                   <Crown size={12} />
                 </span>
               ) : (
-                <span className="flex h-[22px] w-[22px] items-center justify-center rounded-md bg-canvas-sunk text-[11px] text-shell-ink/40">
+                <span className="flex h-[22px] w-[22px] items-center justify-center rounded-md bg-sunk text-[11px] text-ink/40">
                   ↗
                 </span>
               )}

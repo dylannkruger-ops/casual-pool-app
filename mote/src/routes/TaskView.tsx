@@ -40,7 +40,7 @@ export function TaskView() {
 
   return (
     <>
-      <Link to="/" className="mb-4 inline-block text-[13px] muted hover:text-shell-ink">
+      <Link to="/" className="mb-4 inline-block text-[13px] muted hover:text-ink">
         ← All tasks
       </Link>
 
@@ -70,7 +70,7 @@ export function TaskView() {
             <AvatarStack people={people} />
             <button
               onClick={() => setInviting(true)}
-              className="rounded-full border border-black/[.12] px-3 py-1 text-[12.5px] transition hover:bg-canvas-sunk"
+              className="rounded-full border border-line px-3 py-1 text-[12.5px] transition hover:bg-sunk"
             >
               {people.length ? 'Manage people' : '+ Invite someone'}
             </button>
@@ -92,7 +92,7 @@ export function TaskView() {
                 ) : a.collab ? (
                   <PersonAvatar initials={a.collab.initials} size={32} pending={a.collab.pending} />
                 ) : (
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/[.12] bg-white text-[11px] font-medium">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-line bg-surface text-[11px] font-medium">
                     You
                   </span>
                 )}
@@ -108,7 +108,7 @@ export function TaskView() {
                 {m.text && (
                   <p
                     className={`mt-1 max-w-3xl text-[14px] leading-relaxed ${
-                      mine ? 'text-shell-ink' : 'text-shell-ink/80'
+                      mine ? 'text-ink' : 'text-ink/80'
                     }`}
                   >
                     {m.text}
@@ -162,7 +162,7 @@ export function TaskView() {
       </div>
 
       <form
-        className="sticky bottom-6 mt-8 flex gap-2 rounded-xl2 border border-black/[.08] bg-white p-2 shadow-card"
+        className="sticky bottom-6 mt-8 flex gap-2 rounded-xl2 border border-line bg-surface p-2 shadow-card"
         onSubmit={(e) => {
           e.preventDefault();
           sendMessage(task.id, draft);
@@ -173,7 +173,7 @@ export function TaskView() {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder={`Reply to ${employee?.name ?? 'the team'}…`}
-          className="h-10 flex-1 rounded-xl bg-transparent px-3 text-[14px] placeholder:text-shell-ink/30 focus-visible:ring-0"
+          className="h-10 flex-1 rounded-xl bg-transparent px-3 text-[14px] placeholder:text-ink/30 focus-visible:ring-0"
         />
         <Button size="sm" disabled={!draft.trim()}>
           Send

@@ -22,7 +22,7 @@ export function Performance() {
         action={<Chip tone="quiet">Updated hourly</Chip>}
       />
 
-      <h2 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+      <h2 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-ink/35">
         Shipped · {shipped.length}
       </h2>
       <Card className="mb-6 overflow-hidden">
@@ -39,13 +39,13 @@ export function Performance() {
             <div className="flex items-center gap-3 sm:w-[280px]">
               {/* The bar runs 90–100%, so the 95% gate sits mid-scale and the
                   difference between 95.1 and 96.4 is actually visible. */}
-              <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-canvas-sunk">
+              <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-sunk">
                 <div
                   className="h-full rounded-full bg-glow"
                   style={{ width: `${Math.max(0, Math.min(100, (s.successRate! - 90) * 10))}%` }}
                 />
                 <span
-                  className="absolute inset-y-0 w-px bg-shell-ink/30"
+                  className="absolute inset-y-0 w-px bg-ink/30"
                   style={{ left: '50%' }}
                   title="95% gate"
                 />
@@ -59,7 +59,7 @@ export function Performance() {
         ))}
       </Card>
 
-      <h2 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+      <h2 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-ink/35">
         Still gating · {gating.length}
       </h2>
       <Card className="overflow-hidden">

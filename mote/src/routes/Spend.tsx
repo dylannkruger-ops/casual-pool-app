@@ -64,7 +64,7 @@ export function Spend() {
             <label className="text-[12.5px] muted" htmlFor="cap">
               Monthly cap
             </label>
-            <div className="flex items-center gap-1 rounded-xl border border-black/[.12] bg-white px-3">
+            <div className="flex items-center gap-1 rounded-xl border border-line bg-surface px-3">
               <span className="text-[13px] muted">$</span>
               <input
                 id="cap"
@@ -87,7 +87,7 @@ export function Spend() {
 
         {spend.monthlyCapUsd !== null && (
           <div className="mt-4">
-            <div className="h-2.5 overflow-hidden rounded-full bg-canvas-sunk">
+            <div className="h-2.5 overflow-hidden rounded-full bg-sunk">
               <div className={`h-full rounded-full ${barTone}`} style={{ width: `${status.pct}%` }} />
             </div>
             <div className="mt-2 flex justify-between text-[12px] muted">
@@ -107,7 +107,7 @@ export function Spend() {
 
       <div className="mb-4 grid gap-4 2xl:grid-cols-2">
         <Card className="px-5 py-1">
-          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-ink/35">
             Limits
           </div>
           <Row
@@ -118,7 +118,7 @@ export function Spend() {
                 aria-label="Alert threshold"
                 value={spend.alertAtPct}
                 onChange={(e) => setAlertPct(Number(e.target.value))}
-                className="h-9 rounded-lg border border-black/[.12] bg-white px-3 text-[13px]"
+                className="h-9 rounded-lg border border-line bg-surface px-3 text-[13px]"
               >
                 {[50, 70, 80, 90].map((p) => (
                   <option key={p} value={p}>
@@ -132,7 +132,7 @@ export function Spend() {
             title="Stop any single run over"
             sub="Catches the runaway loop directly, without waiting for the monthly cap."
             right={
-              <div className="flex items-center gap-1 rounded-lg border border-black/[.12] bg-white px-2.5">
+              <div className="flex items-center gap-1 rounded-lg border border-line bg-surface px-2.5">
                 <span className="text-[13px] muted">$</span>
                 <input
                   aria-label="Per-run ceiling"
@@ -154,7 +154,7 @@ export function Spend() {
         </Card>
 
         <Card className="px-5 py-1">
-          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-ink/35">
             When the cap is reached
           </div>
           {AT_CAP.map((o) => (
@@ -164,7 +164,7 @@ export function Spend() {
                 name="atcap"
                 checked={spend.atCap === o.id}
                 onChange={() => setAtCap(o.id)}
-                className="mt-1 h-4 w-4 accent-[#16181b]"
+                className="mt-1 h-4 w-4 accent-ink"
               />
               <span>
                 <span className="block text-sm font-medium">{o.label}</span>
@@ -176,7 +176,7 @@ export function Spend() {
       </div>
 
       <Card className="overflow-hidden">
-        <div className="border-b hairline px-5 py-4 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+        <div className="border-b hairline px-5 py-4 text-[11px] font-medium uppercase tracking-wider text-ink/35">
           Where it went
         </div>
         {rows.map(([id, amount]) => {
@@ -186,8 +186,8 @@ export function Spend() {
             <div key={id} className="flex items-center gap-3.5 border-b hairline px-5 py-3.5 last:border-0">
               <Avatar id={id} size={30} />
               <span className="w-24 shrink-0 text-[13.5px] font-medium">{e?.name ?? id}</span>
-              <div className="h-2 flex-1 overflow-hidden rounded-full bg-canvas-sunk">
-                <div className="h-full rounded-full bg-shell-ink/70" style={{ width: `${share}%` }} />
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-sunk">
+                <div className="h-full rounded-full bg-ink/70" style={{ width: `${share}%` }} />
               </div>
               <span className="w-16 shrink-0 text-right text-[13px] tabular-nums">{usd(amount)}</span>
             </div>

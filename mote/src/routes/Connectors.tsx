@@ -21,14 +21,14 @@ function ConnectorRow({ c }: { c: Connector }) {
           {c.kind === 'mcp' && <Chip tone="quiet">MCP</Chip>}
           <span className="text-[12.5px] muted">{c.category}</span>
         </div>
-        <p className="mt-1 text-[13px] leading-relaxed text-shell-ink/65">{c.blurb}</p>
+        <p className="mt-1 text-[13px] leading-relaxed text-ink/65">{c.blurb}</p>
 
         {/* Declared up front, enforced at runtime (FR-37). */}
         <p className="mt-1.5 text-[12px] muted">
-          <span className="text-shell-ink/40">May: </span>
+          <span className="text-ink/40">May: </span>
           {c.permissions.join(' · ')}
         </p>
-        {c.url && <p className="mt-1 truncate font-mono text-[11.5px] text-shell-ink/40">{c.url}</p>}
+        {c.url && <p className="mt-1 truncate font-mono text-[11.5px] text-ink/40">{c.url}</p>}
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
@@ -121,7 +121,7 @@ export function Connectors() {
         action={<Button onClick={() => setAdding(true)}>Add MCP server</Button>}
       />
 
-      <h2 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+      <h2 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-ink/35">
         Connected · {connected.length}
       </h2>
       <Card className="mb-6 overflow-hidden">
@@ -132,7 +132,7 @@ export function Connectors() {
         </ul>
       </Card>
 
-      <h2 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+      <h2 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-ink/35">
         Available · {available.length}
       </h2>
       <Card className="mb-6 overflow-hidden">
@@ -145,7 +145,7 @@ export function Connectors() {
 
       <Card className="p-5">
         <h3 className="text-[14px] font-semibold tracking-tight">Bring your own server</h3>
-        <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-shell-ink/70">
+        <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-ink/70">
           MOTE speaks MCP, so anything you can expose as an MCP server becomes something your team
           can use — your database, your internal tools, the thing only your company has. There is no
           per-app integration to wait for.
@@ -155,7 +155,7 @@ export function Connectors() {
             <span
               key={m.name}
               title={m.blurb}
-              className="rounded-full border border-black/[.10] px-3 py-1.5 text-[12.5px] text-shell-ink/65"
+              className="rounded-full border border-line px-3 py-1.5 text-[12.5px] text-ink/65"
             >
               {m.name}
             </span>

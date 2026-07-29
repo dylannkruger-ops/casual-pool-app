@@ -9,12 +9,12 @@ import { NewProjectDialog, NewTaskDialog } from './dialogs';
 
 const row = ({ isActive }: { isActive: boolean }) =>
   `flex items-center justify-between gap-2 rounded-xl px-2.5 py-[7px] text-[13px] transition ${
-    isActive ? 'bg-black/[.06] font-medium text-shell-ink' : 'text-shell-ink/65 hover:bg-black/[.035]'
+    isActive ? 'bg-hover font-medium text-ink' : 'text-ink/65 hover:bg-hover'
   }`;
 
 function Label({ children }: { children: string }) {
   return (
-    <div className="mb-1 mt-5 px-2.5 text-[11px] font-medium uppercase tracking-wider text-shell-ink/30">
+    <div className="mb-1 mt-5 px-2.5 text-[11px] font-medium uppercase tracking-wider text-ink/30">
       {children}
     </div>
   );
@@ -33,14 +33,14 @@ export function Sidebar() {
 
   return (
     <aside className="hidden h-screen w-[268px] shrink-0 flex-col border-r hairline bg-canvas px-3 py-4 lg:flex">
-      <Link to="/" className="mb-3 flex items-center gap-2.5 rounded-xl px-2 py-1 transition hover:bg-black/[.035]">
+      <Link to="/" className="mb-3 flex items-center gap-2.5 rounded-xl px-2 py-1 transition hover:bg-hover">
         <Avatar id="mote" size={26} />
         <span className="text-[14.5px] font-semibold tracking-[-.01em]">MOTE</span>
       </Link>
 
       <button
         onClick={() => setNewTask(true)}
-        className="mb-2.5 flex h-9 items-center justify-center gap-1.5 rounded-full bg-shell-ink text-[13px] font-medium text-white transition hover:bg-shell-deep"
+        className="mb-2.5 flex h-9 items-center justify-center gap-1.5 rounded-full bg-btn text-[13px] font-medium text-btn-ink transition hover:opacity-90"
       >
         <span className="text-[15px] leading-none">+</span> New task
       </button>
@@ -48,10 +48,10 @@ export function Sidebar() {
       {/* One search for the whole app, rather than a rail filter plus a jump box. */}
       <button
         onClick={() => setPalette(true)}
-        className="mb-1 flex h-8 items-center justify-between rounded-full bg-black/[.04] px-3.5 text-[12.5px] text-shell-ink/45 transition hover:bg-black/[.07]"
+        className="mb-1 flex h-8 items-center justify-between rounded-full bg-hover px-3.5 text-[12.5px] text-ink/45 transition hover:bg-hover"
       >
         Search
-        <span className="text-[11px] text-shell-ink/35">⌘K</span>
+        <span className="text-[11px] text-ink/35">⌘K</span>
       </button>
 
       {approvals.length > 0 && (
@@ -94,17 +94,17 @@ export function Sidebar() {
             </NavLink>
           ))}
           <NavLink to="/history" className={row}>
-            <span className="text-shell-ink/45">All tasks</span>
+            <span className="text-ink/45">All tasks</span>
           </NavLink>
         </nav>
 
         <div className="mb-1 mt-5 flex items-center justify-between px-2.5">
-          <span className="text-[11px] font-medium uppercase tracking-wider text-shell-ink/30">
+          <span className="text-[11px] font-medium uppercase tracking-wider text-ink/30">
             Projects
           </span>
           <button
             onClick={() => setNewProject(true)}
-            className="text-[14px] leading-none text-shell-ink/30 hover:text-shell-ink"
+            className="text-[14px] leading-none text-ink/30 hover:text-ink"
             aria-label="New project"
             title="New project"
           >

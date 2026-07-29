@@ -7,12 +7,12 @@ import type { Step } from '../lib/types';
  */
 export function StepReceipt({ steps, who }: { steps: Step[]; who: string }) {
   return (
-    <div className="mt-3 overflow-hidden rounded-xl border border-black/[.07] bg-canvas-sunk/70">
-      <div className="border-b border-black/[.06] px-4 py-2 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+    <div className="mt-3 overflow-hidden rounded-xl border border-line bg-sunk/70">
+      <div className="border-b border-line px-4 py-2 text-[11px] font-medium uppercase tracking-wider text-ink/35">
         What {who} actually did
       </div>
       {steps.map((s) => (
-        <div key={s.n} className="flex gap-3 border-b border-black/[.05] px-4 py-2.5 last:border-0">
+        <div key={s.n} className="flex gap-3 border-b border-line px-4 py-2.5 last:border-0">
           <span
             className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${
               s.verified ? 'bg-glow' : s.halt ? 'bg-[#ef7d8e]' : 'bg-crown'
@@ -21,7 +21,7 @@ export function StepReceipt({ steps, who }: { steps: Step[]; who: string }) {
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-baseline gap-x-2">
               <span className="font-mono text-[12.5px] font-medium">{s.action}</span>
-              <span className="text-[13px] text-shell-ink/75">{s.target}</span>
+              <span className="text-[13px] text-ink/75">{s.target}</span>
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
               <LayerChip layer={s.layer} />
@@ -31,7 +31,7 @@ export function StepReceipt({ steps, who }: { steps: Step[]; who: string }) {
               </span>
             </div>
             {s.halt && (
-              <div className="mt-2 rounded-lg bg-white px-3 py-2 text-[12px]">
+              <div className="mt-2 rounded-lg bg-surface px-3 py-2 text-[12px]">
                 <p>
                   <span className="muted">Expected </span>
                   {s.halt.expected}

@@ -27,7 +27,7 @@ export function TaskRowCompact({ task }: { task: Task }) {
   return (
     <Link
       to={`/task/${task.id}`}
-      className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition hover:bg-black/[.035]"
+      className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition hover:bg-hover"
     >
       <Avatar id={task.employeeId} size={26} />
       <span className="min-w-0 flex-1 truncate text-[14px]">{task.title}</span>
@@ -49,7 +49,7 @@ export function TaskRow({ task }: { task: Task }) {
   return (
     <Link
       to={`/task/${task.id}`}
-      className="flex gap-3 border-b hairline px-4 py-3.5 transition last:border-0 hover:bg-canvas-sunk/60 sm:items-center sm:gap-3.5 sm:px-5"
+      className="flex gap-3 border-b hairline px-4 py-3.5 transition last:border-0 hover:bg-sunk/60 sm:items-center sm:gap-3.5 sm:px-5"
     >
       <Star on={task.favourite} onClick={() => toggleFavourite(task.id)} />
       <Avatar id={task.employeeId} size={34} />
@@ -84,7 +84,7 @@ export function TaskGroup({ label, tasks }: { label: string; tasks: Task[] }) {
   if (tasks.length === 0) return null;
   return (
     <section className="mb-6">
-      <h2 className="mb-2 px-1 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+      <h2 className="mb-2 px-1 text-[11px] font-medium uppercase tracking-wider text-ink/35">
         {label}
       </h2>
       <div className="card overflow-hidden">

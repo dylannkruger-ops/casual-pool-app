@@ -20,7 +20,7 @@ export function EmployeePage() {
 
   return (
     <>
-      <Link to="/team" className="mb-4 inline-block text-[13px] muted hover:text-shell-ink">
+      <Link to="/team" className="mb-4 inline-block text-[13px] muted hover:text-ink">
         ← Your team
       </Link>
 
@@ -31,7 +31,7 @@ export function EmployeePage() {
             renders carry their own white background — any wash showed as scruffy
             corners — so the character's colour comes back as a ring instead. */}
         <div
-          className="w-fit shrink-0 self-start overflow-hidden rounded-xl2 bg-white"
+          className="w-fit shrink-0 self-start overflow-hidden rounded-xl2 bg-surface"
           style={{ boxShadow: `0 0 0 2px ${employee.tint}` }}
         >
           <img
@@ -58,7 +58,7 @@ export function EmployeePage() {
             )}
           </div>
 
-          <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-shell-ink/75">{employee.blurb}</p>
+          <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-ink/75">{employee.blurb}</p>
 
           <div className="mt-4 flex flex-wrap items-center gap-2">
             {isHired ? (
@@ -73,7 +73,7 @@ export function EmployeePage() {
               <Chip tone="quiet">In onboarding — {skill.runs} bench runs, not yet at 95%</Chip>
             )}
             <span
-              className="inline-flex items-center gap-1.5 rounded-full border border-black/[.08] px-3 py-1 text-[12px] muted"
+              className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1 text-[12px] muted"
               title="This employee's eye colour on the face widget"
             >
               <span className="h-2.5 w-2.5 rounded-full" style={{ background: employee.tint }} />
@@ -86,7 +86,7 @@ export function EmployeePage() {
       <div className="grid gap-4 2xl:grid-cols-[1.4fr_1fr]">
         <div className="min-w-0 space-y-4">
           <Card className="px-5 py-1">
-            <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+            <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-ink/35">
               What {employee.name} owns
             </div>
             {employee.skills.map((s) => (
@@ -102,7 +102,7 @@ export function EmployeePage() {
                   )}
                 </div>
                 <div className="mt-2.5 text-[13px] muted">Needs before starting: {s.preconditions.join(' · ')}</div>
-                <div className="mt-1.5 text-[13px] text-shell-ink/60">
+                <div className="mt-1.5 text-[13px] text-ink/60">
                   <span className="muted">Known failure. </span>
                   {s.failureMode}
                 </div>
@@ -111,7 +111,7 @@ export function EmployeePage() {
           </Card>
 
           <Card className="overflow-hidden">
-            <div className="border-b hairline px-5 py-4 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+            <div className="border-b hairline px-5 py-4 text-[11px] font-medium uppercase tracking-wider text-ink/35">
               Tasks
             </div>
             {theirTasks.length === 0 ? (
@@ -123,7 +123,7 @@ export function EmployeePage() {
         </div>
 
         <Card className="px-5 py-1">
-          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+          <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-ink/35">
             Trust profile
           </div>
 

@@ -20,7 +20,7 @@ export function Approvals() {
 
       {approvals.length === 0 ? (
         <Card className="flex flex-col items-center px-6 py-14 text-center">
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-canvas-sunk text-shell-ink/25">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sunk text-ink/25">
             <Crown size={19} />
           </span>
           <p className="mt-3.5 text-[15px] font-medium">Nothing needs your yes.</p>
@@ -42,7 +42,7 @@ export function Approvals() {
                   </div>
                 </div>
 
-                <div className="mt-4 rounded-xl bg-canvas-sunk p-4">
+                <div className="mt-4 rounded-xl bg-sunk p-4">
                   <div className="mb-2 flex items-center justify-between text-[11.5px] muted">
                     <span>
                       {employee?.name} · asked at {a.requestedAt} ·{' '}
@@ -52,7 +52,7 @@ export function Approvals() {
                     </span>
                     <span>Redacted preview</span>
                   </div>
-                  <div className="space-y-1 font-mono text-[12.5px] leading-relaxed text-shell-ink/75">
+                  <div className="space-y-1 font-mono text-[12.5px] leading-relaxed text-ink/75">
                     {a.preview.map((line, i) => (
                       <p key={i}>{line}</p>
                     ))}

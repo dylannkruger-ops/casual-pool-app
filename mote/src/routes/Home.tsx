@@ -43,20 +43,20 @@ function Composer() {
           e.preventDefault();
           submit();
         }}
-        className="flex items-center gap-2 rounded-2xl bg-white p-2 shadow-card ring-1 ring-black/[.05] focus-within:ring-shell-ink/25"
+        className="flex items-center gap-2 rounded-2xl bg-surface p-2 shadow-card ring-1 ring-line focus-within:ring-ink/25"
       >
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Ask the team for something…"
           aria-label="Ask the team for something"
-          className="h-11 min-w-0 flex-1 bg-transparent px-3 text-[15px] placeholder:text-shell-ink/30 focus-visible:ring-0"
+          className="h-11 min-w-0 flex-1 bg-transparent px-3 text-[15px] placeholder:text-ink/30 focus-visible:ring-0"
         />
         <button
           type="submit"
           disabled={!text.trim() || capBlocked}
           aria-label="Start task"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-shell-ink text-white transition hover:bg-shell-deep disabled:opacity-25"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-btn text-btn-ink transition hover:opacity-90 disabled:opacity-25"
         >
           <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 19V5M6 11l6-6 6 6" />
@@ -73,8 +73,8 @@ function Composer() {
             title={e.role}
             className={`flex items-center gap-1.5 rounded-full py-1 pl-1 pr-2.5 text-[12.5px] transition ${
               assignee === e.id
-                ? 'bg-shell-ink text-white'
-                : 'text-shell-ink/65 hover:bg-black/[.05]'
+                ? 'bg-btn text-btn-ink'
+                : 'text-ink/65 hover:bg-hover'
             }`}
           >
             <Avatar id={e.id} size={20} />
@@ -84,7 +84,7 @@ function Composer() {
       </div>
 
       {capBlocked && (
-        <p className="mt-3 text-[13px] text-[#a8455a]">
+        <p className="mt-3 text-[13px] text-[#a8455a] dark:text-[#f0a0b0]">
           You are at this month's spend cap.{' '}
           <Link to="/spend" className="underline underline-offset-2">
             Raise it
@@ -124,7 +124,7 @@ function Suggestions() {
             <Avatar id={i.employeeId} size={22} />
             <span className="truncate text-[14px]">{i.text}</span>
           </span>
-          <span className="shrink-0 text-[13px] text-shell-ink/30">↗</span>
+          <span className="shrink-0 text-[13px] text-ink/30">↗</span>
         </button>
       ))}
     </div>
@@ -151,7 +151,7 @@ export function Home() {
             to="/approvals"
             className="mt-6 flex items-center gap-3 rounded-2xl bg-crown-soft/60 px-4 py-3 transition hover:bg-crown-soft"
           >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-crown">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface text-crown">
               <Crown size={15} />
             </span>
             <span className="min-w-0 flex-1 text-[13.5px]">
@@ -160,7 +160,7 @@ export function Home() {
               </span>
               <span className="block truncate muted">{approvals[0].what}</span>
             </span>
-            <span className="shrink-0 text-[13px] text-shell-ink/30">→</span>
+            <span className="shrink-0 text-[13px] text-ink/30">→</span>
           </Link>
         )}
 
@@ -169,10 +169,10 @@ export function Home() {
         {recent.length > 0 && (
           <div className="mt-10">
             <div className="mb-1 flex items-baseline justify-between">
-              <h2 className="text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
+              <h2 className="text-[11px] font-medium uppercase tracking-wider text-ink/35">
                 Recent
               </h2>
-              <Link to="/history" className="text-[12.5px] muted hover:text-shell-ink">
+              <Link to="/history" className="text-[12.5px] muted hover:text-ink">
                 All tasks →
               </Link>
             </div>
@@ -222,7 +222,7 @@ export function ProjectView() {
 
   return (
     <>
-      <button onClick={() => navigate('/history')} className="mb-4 text-[13px] muted hover:text-shell-ink">
+      <button onClick={() => navigate('/history')} className="mb-4 text-[13px] muted hover:text-ink">
         ← All tasks
       </button>
       <PageHead

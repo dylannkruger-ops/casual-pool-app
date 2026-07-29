@@ -3,13 +3,49 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --canvas: 250 249 247;
+    --surface: 255 255 255;
+    --sunk: 242 240 236;
+    --ink: 22 24 27;
+    --line: 229 227 222;
+    --hover: 240 239 235;
+    --btn: 22 24 27;
+    --btn-ink: 255 255 255;
+    --widget: 22 24 27;
+    --widget-ink: 255 255 255;
+    --crown-soft: 245 228 176;
+    --shadow-card: 0 1px 2px rgba(22, 24, 27, 0.04), 0 8px 24px -12px rgba(22, 24, 27, 0.12);
+    --shadow-widget: 0 18px 48px -12px rgba(22, 24, 27, 0.45);
+    color-scheme: light;
+  }
+
+  /* Dark is a real palette, not an inversion: the canvas goes near-black, cards
+     lift off it, and separation comes from the line colour rather than shadows,
+     which are invisible on dark. */
+  [data-theme='dark'] {
+    --canvas: 13 14 16;
+    --surface: 24 25 28;
+    --sunk: 33 35 39;
+    --ink: 236 236 233;
+    --line: 45 47 52;
+    --hover: 37 39 44;
+    --btn: 236 236 233;
+    --btn-ink: 20 21 24;
+    --widget: 33 35 39;
+    --widget-ink: 236 236 233;
+    --crown-soft: 56 44 16;
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-widget: 0 18px 48px -12px rgba(0, 0, 0, 0.7);
+    color-scheme: dark;
+  }
+
   html {
     -webkit-font-smoothing: antialiased;
   }
   body {
-    @apply bg-canvas text-shell-ink;
+    @apply bg-canvas text-ink;
   }
-  /* Focus ring uses the glow, once, everywhere. */
   :where(a, button, input, select, [tabindex]):focus-visible {
     @apply outline-none ring-2 ring-glow ring-offset-2 ring-offset-canvas rounded-lg;
   }
@@ -19,12 +55,12 @@
   .card {
     /* min-w-0: cards live in grids, and a grid item defaults to min-width:auto,
        so one nowrap chip inside can force the whole track wider than the phone. */
-    @apply min-w-0 rounded-2xl bg-white shadow-card ring-1 ring-black/[.04];
+    @apply min-w-0 rounded-2xl bg-surface shadow-card ring-1 ring-line;
   }
   .muted {
-    @apply text-shell-ink/55;
+    @apply text-ink/55;
   }
   .hairline {
-    @apply border-black/[.07];
+    @apply border-line;
   }
 }

@@ -24,7 +24,7 @@ function TabIcon({ d, filled = false }: { d: string; filled?: boolean }) {
 
 const tab = ({ isActive }: { isActive: boolean }) =>
   `flex flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10.5px] font-medium transition ${
-    isActive ? 'bg-black/[.06] text-shell-ink' : 'text-shell-ink/45'
+    isActive ? 'bg-hover text-ink' : 'text-ink/45'
   }`;
 
 /** Sintra-style header: who you are, where you are, and one actions button. */
@@ -40,7 +40,7 @@ export function MobileHeader({ title }: { title: string }) {
       <button
         onClick={() => setPalette(true)}
         aria-label="Search"
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-shell-ink/50 shadow-card"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-surface text-ink/50 shadow-card"
       >
         <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <circle cx="11" cy="11" r="7" />
@@ -50,7 +50,7 @@ export function MobileHeader({ title }: { title: string }) {
       <button
         onClick={() => navigate('/approvals')}
         aria-label="Approvals"
-        className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white text-crown shadow-card"
+        className="relative flex h-10 w-10 items-center justify-center rounded-full bg-surface text-crown shadow-card"
       >
         <Crown size={17} />
         {approvals.length > 0 && (
@@ -84,13 +84,13 @@ function MoreSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
               onClose();
               navigate(to);
             }}
-            className="flex w-full items-center justify-between gap-3 rounded-xl px-2 py-3.5 text-left transition hover:bg-canvas-sunk"
+            className="flex w-full items-center justify-between gap-3 rounded-xl px-2 py-3.5 text-left transition hover:bg-sunk"
           >
             <span>
               <span className="block text-[14.5px] font-medium">{label}</span>
               <span className="mt-0.5 block text-[12.5px] muted">{sub}</span>
             </span>
-            <span className="text-shell-ink/25">›</span>
+            <span className="text-ink/25">›</span>
           </button>
         ))}
       </div>
@@ -118,7 +118,7 @@ export function MobileTabBar() {
         <button
           onClick={() => setNewTask(true)}
           aria-label="New task"
-          className="flex h-14 w-14 items-center justify-center self-end rounded-full bg-shell-ink text-[26px] font-light text-white shadow-widget"
+          className="flex h-14 w-14 items-center justify-center self-end rounded-full bg-btn text-[26px] font-light text-btn-ink shadow-widget"
         >
           +
         </button>
@@ -129,7 +129,7 @@ export function MobileTabBar() {
           </div>
         ) : (
           widget !== 'idle' && (
-            <div className="mx-auto flex w-full max-w-md items-center gap-2.5 rounded-full bg-shell-ink px-3 py-2 text-white shadow-widget">
+            <div className="mx-auto flex w-full max-w-md items-center gap-2.5 rounded-full bg-widget px-3 py-2 text-widget-ink shadow-widget">
               <Avatar id={activeEmployee} size={22} />
               <span className="truncate text-[12.5px]">
                 {widget === 'needs-you'
@@ -140,7 +140,7 @@ export function MobileTabBar() {
           )
         )}
 
-        <nav className="mx-auto flex w-full max-w-md items-center gap-1 rounded-[26px] border border-black/[.05] bg-white/95 p-1.5 shadow-widget backdrop-blur">
+        <nav className="mx-auto flex w-full max-w-md items-center gap-1 rounded-[26px] border border-line bg-surface/95 p-1.5 shadow-widget backdrop-blur">
           <NavLink to="/" end className={tab}>
             {({ isActive }) => (
               <>

@@ -35,7 +35,7 @@ export function Team() {
             <span className="text-[13.5px] muted">{mote.role}</span>
             <LeaderBadge />
           </div>
-          <p className="mt-1.5 max-w-2xl text-[14px] leading-relaxed text-shell-ink/70">{mote.blurb}</p>
+          <p className="mt-1.5 max-w-2xl text-[14px] leading-relaxed text-ink/70">{mote.blurb}</p>
           <p className="mt-2 text-[12.5px] muted">
             {mote.skills[0].successRate}% routing accuracy over {mote.skills[0].runs} jobs · always on, never
             takes a seat
@@ -74,13 +74,13 @@ export function Team() {
                   <h3 className="text-[16px] font-semibold tracking-tight">{e.name}</h3>
                   <span className="text-[13px] muted">{e.role}</span>
                 </div>
-                <p className="mt-1.5 text-[13.5px] leading-relaxed text-shell-ink/70">{e.blurb}</p>
+                <p className="mt-1.5 text-[13.5px] leading-relaxed text-ink/70">{e.blurb}</p>
               </div>
 
               <div className="mt-4 border-t hairline pt-3.5 text-[12.5px]">
                 {gated ? (
                   <span className="muted">
-                    <span className="font-medium text-shell-ink">{skill.successRate}%</span> over {skill.runs}{' '}
+                    <span className="font-medium text-ink">{skill.successRate}%</span> over {skill.runs}{' '}
                     measured runs
                     {isHired &&
                       taskCount(e.id) > 0 &&

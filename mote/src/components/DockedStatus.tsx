@@ -36,7 +36,7 @@ export function DockedStatus() {
   }, [kill]);
 
   return (
-    <div className="rounded-2xl bg-shell-ink px-3 py-2.5 text-white">
+    <div className="rounded-2xl bg-widget px-3 py-2.5 text-widget-ink">
       <div className="flex items-center gap-2.5">
         <button onClick={kill} title="Click the face to halt (or press Esc)" className="shrink-0">
           <Mote state={widget} tint={tint} size={34} arms={false} />
@@ -44,17 +44,17 @@ export function DockedStatus() {
         <div className="min-w-0 flex-1">
           <div className="truncate text-[12.5px] font-medium">{employee?.name ?? 'Mote'}</div>
           {/* Discreet mode hides the caption, never the state (§5.3). */}
-          <div className="truncate text-[11.5px] text-white/55">
+          <div className="truncate text-[11.5px] text-widget-ink/55">
             {discreet ? '—' : CAPTION[widget]}
           </div>
         </div>
       </div>
 
-      <div className="mt-2 flex items-center gap-1 border-t border-white/10 pt-2">
+      <div className="mt-2 flex items-center gap-1 border-t border-widget-ink/10 pt-2">
         <button
           onClick={toggleDiscreet}
           className={`rounded-full px-2 py-0.5 text-[11px] transition ${
-            discreet ? 'bg-white/15 text-white' : 'text-white/45 hover:text-white'
+            discreet ? 'bg-widget-ink/15 text-widget-ink' : 'text-widget-ink/45 hover:text-widget-ink'
           }`}
         >
           Discreet
@@ -62,7 +62,7 @@ export function DockedStatus() {
         <button
           onClick={kill}
           disabled={!busy}
-          className="rounded-full px-2 py-0.5 text-[11px] text-white/45 transition hover:text-white disabled:opacity-40"
+          className="rounded-full px-2 py-0.5 text-[11px] text-widget-ink/45 transition hover:text-widget-ink disabled:opacity-40"
         >
           Esc — halt
         </button>

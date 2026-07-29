@@ -31,7 +31,7 @@ export function Modal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-shell-ink/25 p-6 pt-[12vh]">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-ink/25 p-6 pt-[12vh]">
       <div
         className="absolute inset-0"
         onClick={onClose}
@@ -41,7 +41,7 @@ export function Modal({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="relative w-full rounded-xl2 border border-black/[.06] bg-white p-6 shadow-widget"
+        className="relative w-full rounded-xl2 border border-line bg-surface p-6 shadow-widget"
         style={{ maxWidth: width }}
       >
         <div className="mb-5">
@@ -62,11 +62,11 @@ export function Modal({
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="mb-4">
-      <span className="mb-1.5 block text-[12px] font-medium text-shell-ink/60">{label}</span>
+      <span className="mb-1.5 block text-[12px] font-medium text-ink/60">{label}</span>
       {children}
     </div>
   );
 }
 
 export const inputClass =
-  'h-10 w-full rounded-xl border border-black/[.12] bg-white px-3.5 text-[13.5px] placeholder:text-shell-ink/30';
+  'h-10 w-full rounded-xl border border-line bg-surface px-3.5 text-[13.5px] placeholder:text-ink/30';

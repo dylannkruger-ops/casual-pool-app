@@ -79,7 +79,7 @@ function Tick({ off }: { off?: boolean }) {
       strokeWidth="2.2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={`mt-[3px] shrink-0 ${off ? 'text-shell-ink/20' : 'text-glow-dim'}`}
+      className={`mt-[3px] shrink-0 ${off ? 'text-ink/20' : 'text-glow-dim'}`}
     >
       {off ? <path d="M6 10h8" /> : <path d="m4 10.5 4 4 8-9" />}
     </svg>
@@ -106,7 +106,7 @@ export function PlanPage() {
           return (
             <Card
               key={p.id}
-              className={`flex flex-col p-5 ${current ? 'ring-2 ring-shell-ink' : ''}`}
+              className={`flex flex-col p-5 ${current ? 'ring-2 ring-ink' : ''}`}
             >
               <div className="flex items-baseline justify-between gap-2">
                 <span className="text-[15px] font-semibold">{p.name}</span>
@@ -138,16 +138,16 @@ export function PlanPage() {
 
               <div className="mt-5 border-t hairline pt-4">
                 {p.inherits && (
-                  <p className="mb-2.5 text-[12px] font-medium text-shell-ink/55">{p.inherits}</p>
+                  <p className="mb-2.5 text-[12px] font-medium text-ink/55">{p.inherits}</p>
                 )}
                 <ul className="space-y-2">
                   {p.features.map((f) => (
                     <li key={f.text} className="flex gap-2.5 text-[13px] leading-relaxed">
                       <Tick off={f.off} />
-                      <span className={f.off ? 'text-shell-ink/35' : 'text-shell-ink/75'}>
+                      <span className={f.off ? 'text-ink/35' : 'text-ink/75'}>
                         {f.text}
                         {f.coming && (
-                          <span className="ml-1.5 whitespace-nowrap rounded-full border border-black/[.10] px-1.5 py-px text-[10.5px] text-shell-ink/45">
+                          <span className="ml-1.5 whitespace-nowrap rounded-full border border-line px-1.5 py-px text-[10.5px] text-ink/45">
                             Coming v1.5
                           </span>
                         )}
@@ -163,7 +163,7 @@ export function PlanPage() {
 
       <Card className="mt-4 p-5">
         <h2 className="text-[13px] font-semibold">True on every plan</h2>
-        <ul className="mt-2.5 grid gap-2 text-[13px] text-shell-ink/70 sm:grid-cols-2">
+        <ul className="mt-2.5 grid gap-2 text-[13px] text-ink/70 sm:grid-cols-2">
           <li className="flex gap-2.5">
             <Tick />
             Sending, submitting and deleting always need your yes. There is no setting.

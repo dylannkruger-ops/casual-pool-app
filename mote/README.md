@@ -68,6 +68,27 @@ those, and everything else is one click further away.
   replaced a rail-only search box, so there is one search rather than two. The
   logo goes home; on a phone the header carries the same search.
 
+## Light and dark
+
+Every colour resolves through a CSS variable, so one `data-theme` attribute on
+`<html>` flips the whole app — there are no `dark:` overrides scattered through
+the components except for a handful of fixed chip tints.
+
+Dark is a designed palette, not an inversion: the canvas goes near-black, cards
+lift off it, and separation comes from the line colour because shadows are
+invisible on dark. The green accent and the crown gold are unchanged in both —
+they are the brand.
+
+The switcher (Light / Dark / System) sits in the account menu. System keeps
+tracking the OS while the app is open; an explicit choice persists and is applied
+before first paint, so there is no white flash on load.
+
+**The portraits needed real transparency for this.** They were rendered on white,
+which on a dark UI reads as a glowing tile. `scripts/build-avatars.mjs` flood-fills
+the background from the edges inward, so the flood stops at the character — that
+keeps Sage's white shirt and Juno's clapperboard, which a plain "white is
+transparent" threshold would have eaten.
+
 ## Mobile
 
 Below `lg` the sidebar and the face widget disappear and Sintra's shape takes
