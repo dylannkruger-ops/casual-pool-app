@@ -74,10 +74,16 @@ Every colour resolves through a CSS variable, so one `data-theme` attribute on
 `<html>` flips the whole app — there are no `dark:` overrides scattered through
 the components except for a handful of fixed chip tints.
 
-Dark is a designed palette, not an inversion: the canvas goes near-black, cards
-lift off it, and separation comes from the line colour because shadows are
-invisible on dark. The green accent and the crown gold are unchanged in both —
-they are the brand.
+Dark is built as a **depth ladder** — rail 10 → canvas 17 → card 30 → well 41 —
+because shadows are invisible on dark and separation has to come from tone. The
+first attempt put all four within a few points of each other and the result was
+flat and washed; the test now asserts the ladder rather than a hex.
+
+A soft green glow sits behind the home hero in dark. Both references carry
+ambient light there, and without it a dark page of hairline rows reads as
+unfinished. It is MOTE's own green rather than a second accent — the nine faces
+already own that colour. Home suggestions are tiles rather than bare rows for
+the same reason: rows disappear on dark.
 
 The switcher (Light / Dark / System) sits in the account menu. System keeps
 tracking the OS while the app is open; an explicit choice persists and is applied

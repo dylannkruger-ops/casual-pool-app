@@ -43,7 +43,7 @@ function Composer() {
           e.preventDefault();
           submit();
         }}
-        className="flex items-center gap-2 rounded-2xl bg-surface p-2 shadow-card ring-1 ring-line focus-within:ring-ink/25"
+        className="flex items-center gap-2 rounded-2xl bg-surface p-2 shadow-card ring-1 ring-line focus-within:ring-glow/40 dark:shadow-widget"
       >
         <input
           value={text}
@@ -110,7 +110,7 @@ function Suggestions() {
   if (ideas.length === 0) return null;
 
   return (
-    <div className="mt-8">
+    <div className="mt-7 grid gap-2.5 sm:grid-cols-2">
       {ideas.map((i) => (
         <button
           key={i.employeeId}
@@ -118,13 +118,14 @@ function Suggestions() {
             const id = createTask({ title: i.text, employeeId: i.employeeId });
             if (id) navigate(`/task/${id}`);
           }}
-          className="flex w-full items-center justify-between gap-3 border-b hairline py-3 text-left transition last:border-0 hover:opacity-60"
+          className="group flex items-start gap-3 rounded-2xl bg-surface p-3.5 text-left shadow-card ring-1 ring-line transition hover:ring-ink/20"
         >
-          <span className="flex min-w-0 items-center gap-2.5">
-            <Avatar id={i.employeeId} size={22} />
-            <span className="truncate text-[14px]">{i.text}</span>
+          <Avatar id={i.employeeId} size={26} />
+          <span className="min-w-0 flex-1">
+            <span className="block text-[13.5px] leading-snug">{i.text}</span>
+            <span className="mt-1 block text-[11.5px] muted">{i.name}</span>
           </span>
-          <span className="shrink-0 text-[13px] text-ink/30">↗</span>
+          <span className="shrink-0 text-[12px] text-ink/25 transition group-hover:text-ink/50">↗</span>
         </button>
       ))}
     </div>
@@ -136,8 +137,20 @@ export function Home() {
   const recent = tasks.slice(0, 3);
 
   return (
-    <div className="mx-auto max-w-[680px]">
-      <div className="pt-6 lg:pt-16">
+    <div className="relative mx-auto max-w-[680px]">
+      {/* Ambient brand light. Both references carry a soft glow behind the
+          welcome screen, and without it a dark page of hairline rows reads as
+          unfinished. It is MOTE's own green rather than a second accent — the
+          nine faces already own that colour. */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-x-0 top-0 hidden h-[560px] dark:block"
+        style={{
+          background:
+            'radial-gradient(60% 70% at 50% -10%, rgba(47,212,99,.11), rgba(47,212,99,.03) 45%, transparent 72%)',
+        }}
+      />
+      <div className="relative pt-6 lg:pt-16">
         <h1 className="text-[26px] font-semibold tracking-[-.025em] lg:text-[34px]">{greeting()}, Dylan</h1>
         <p className="mb-6 mt-1.5 text-[14.5px] muted lg:mb-7 lg:text-[15px]">
           What should the team do?

@@ -32,7 +32,7 @@ export function MobileHeader({ title }: { title: string }) {
   const { approvals, setPalette } = useMote();
   const navigate = useNavigate();
   return (
-    <header className="sticky top-0 z-30 flex items-center gap-3 bg-canvas/95 px-5 pb-3 pt-5 backdrop-blur lg:hidden">
+    <header className="sticky top-0 z-30 flex items-center gap-3 bg-canvas/90 px-5 pb-3 pt-5 backdrop-blur lg:hidden">
       <Avatar id="mote" size={40} />
       <div className="min-w-0 flex-1">
         <h1 className="truncate text-[19px] font-semibold leading-tight tracking-[-.02em]">{title}</h1>

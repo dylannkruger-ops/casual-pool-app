@@ -9,6 +9,8 @@ export default {
     extend: {
       colors: {
         canvas: { DEFAULT: token('canvas'), sunk: token('sunk') },
+        /** The sidebar sits deeper than the canvas so the content lifts off it. */
+        rail: token('rail'),
         surface: token('surface'),
         sunk: token('sunk'),
         ink: token('ink'),

@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    --rail: 250 249 247;
     --canvas: 250 249 247;
     --surface: 255 255 255;
     --sunk: 242 240 236;
@@ -24,16 +25,21 @@
      lift off it, and separation comes from the line colour rather than shadows,
      which are invisible on dark. */
   [data-theme='dark'] {
-    --canvas: 13 14 16;
-    --surface: 24 25 28;
-    --sunk: 33 35 39;
-    --ink: 236 236 233;
-    --line: 45 47 52;
-    --hover: 37 39 44;
+    /* A depth ladder, not one flat grey: the rail recedes, the canvas sits
+       above it, cards lift again, and recessed wells go higher still. The
+       first attempt put all four within a few points of each other, so
+       nothing read as raised and the whole app looked washed. */
+    --rail: 9 10 12;
+    --canvas: 15 16 19;
+    --surface: 27 29 33;
+    --sunk: 37 40 45;
+    --ink: 237 238 236;
+    --line: 55 58 65;
+    --hover: 42 45 51;
     --btn: 236 236 233;
     --btn-ink: 20 21 24;
-    --widget: 33 35 39;
-    --widget-ink: 236 236 233;
+    --widget: 37 40 45;
+    --widget-ink: 237 238 236;
     --crown-soft: 56 44 16;
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-widget: 0 18px 48px -12px rgba(0, 0, 0, 0.7);

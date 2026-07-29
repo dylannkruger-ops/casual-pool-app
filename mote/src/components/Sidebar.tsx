@@ -32,7 +32,7 @@ export function Sidebar() {
   const rest = tasks.filter((t) => !t.favourite);
 
   return (
-    <aside className="hidden h-screen w-[268px] shrink-0 flex-col border-r hairline bg-canvas px-3 py-4 lg:flex">
+    <aside className="hidden h-screen w-[268px] shrink-0 flex-col border-r hairline bg-rail px-3 py-4 lg:flex">
       <Link to="/" className="mb-3 flex items-center gap-2.5 rounded-xl px-2 py-1 transition hover:bg-hover">
         <Avatar id="mote" size={26} />
         <span className="text-[14.5px] font-semibold tracking-[-.01em]">MOTE</span>
