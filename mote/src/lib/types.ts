@@ -24,8 +24,6 @@ export type Employee = {
   tint: string;
   /** 4:5 head-and-torso portrait, framed to match across the team. */
   avatar: string;
-  /** Full-figure render, where one exists. Profile pages only. */
-  portrait?: string;
   /** One line, in the employee's own voice. */
   blurb: string;
   status: EmployeeStatus;

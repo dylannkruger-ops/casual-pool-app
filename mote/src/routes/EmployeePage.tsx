@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { byId } from '../data/roster';
 import { useMote } from '../store/useMote';
-import { Avatar, LeaderBadge } from '../components/Avatar';
+import { LeaderBadge } from '../components/Avatar';
 import { Crown } from '../components/Crown';
 import { TaskRow } from '../components/TaskList';
 import { Button, Card, Chip, Row, Toggle } from '../components/ui';
@@ -25,16 +25,23 @@ export function EmployeePage() {
       </Link>
 
       <header className="mb-7 flex flex-col gap-5 sm:flex-row sm:items-start">
-        {/* The five characters with a solo render get the full figure here. */}
-        {employee.portrait ? (
+        {/* Every profile uses the same 4:5 head-and-torso portrait. A full-figure
+            render for some and a squared-off head crop for others made the roster
+            look like two different products. The panel is white because the
+            renders carry their own white background — any wash showed as scruffy
+            corners — so the character's colour comes back as a ring instead. */}
+        <div
+          className="w-fit shrink-0 self-start overflow-hidden rounded-xl2 bg-white"
+          style={{ boxShadow: `0 0 0 2px ${employee.tint}` }}
+        >
           <img
-            src={employee.portrait}
+            src={employee.avatar}
             alt={employee.name}
-            className="h-[168px] w-[168px] shrink-0 rounded-xl2 bg-canvas-sunk object-cover"
+            width={176}
+            height={220}
+            className="h-[220px] w-[176px] object-cover"
           />
-        ) : (
-          <Avatar id={employee.id} size={168} />
-        )}
+        </div>
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline gap-2.5">
@@ -77,7 +84,7 @@ export function EmployeePage() {
       </header>
 
       <div className="grid gap-4 2xl:grid-cols-[1.4fr_1fr]">
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-4">
           <Card className="px-5 py-1">
             <div className="border-b hairline py-4 text-[11px] font-medium uppercase tracking-wider text-shell-ink/35">
               What {employee.name} owns

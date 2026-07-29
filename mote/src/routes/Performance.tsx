@@ -16,7 +16,8 @@ export function Performance() {
       />
 
       <Card className="overflow-hidden">
-        <table className="w-full text-[13.5px]">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-[560px] text-[13.5px]">
           <thead>
             <tr className="border-b hairline text-[11px] uppercase tracking-wider text-shell-ink/35">
               <th className="px-5 py-3 text-left font-medium">Employee</th>
@@ -53,6 +54,7 @@ export function Performance() {
             )}
           </tbody>
         </table>
+        </div>
       </Card>
 
       <div className="mt-5 max-w-2xl space-y-2 text-[13px] muted">

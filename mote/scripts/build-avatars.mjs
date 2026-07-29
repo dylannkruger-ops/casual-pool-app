@@ -24,7 +24,7 @@ const LINEUP_HEADS = [
   { id: 'vance', cx: 320 },
   { id: 'marlow', cx: 492 },
   { id: 'tally', cx: 1057 },
-].map((c) => ({ id: c.id, left: Math.max(0, c.cx - 82), top: 286, width: 164, height: 205 }));
+].map((c) => ({ id: c.id, left: Math.max(0, c.cx - 76), top: 288, width: 152, height: 190 }));
 
 const SOLO = [
   { id: 'mote', src: '01861694-IMG_5673.png', left: 218, top: 45, width: 588, height: 735 },
@@ -48,9 +48,6 @@ for (const c of SOLO) {
     .resize(400, 500)
     .png({ compressionLevel: 9 })
     .toFile(`${OUT}${c.id}.png`);
-  // Full figure, for the profile page hero.
-  await sharp(UP + c.src).resize(720, 720, { fit: 'cover' }).png({ compressionLevel: 9 })
-    .toFile(`${OUT}${c.id}-full.png`);
 }
 
 console.log('avatars written to', OUT);

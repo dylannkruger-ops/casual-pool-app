@@ -17,7 +17,9 @@
 
 @layer components {
   .card {
-    @apply rounded-xl2 border border-black/[.06] bg-white shadow-card;
+    /* min-w-0: cards live in grids, and a grid item defaults to min-width:auto,
+       so one nowrap chip inside can force the whole track wider than the phone. */
+    @apply min-w-0 rounded-xl2 border border-black/[.06] bg-white shadow-card;
   }
   .muted {
     @apply text-shell-ink/55;
