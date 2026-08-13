@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Obsidian Studio — Design at the pace of conviction</title>
+<style>
+  :root{
+    --bg: #0A0A0C;
+    --bg-1: #101013;
+    --bg-2: #16161A;
+    --hair: rgba(245,241,236,0.09);
+    --hair-strong: rgba(245,241,236,0.16);
+    --ink: #F4EFE8;
+    --ink-dim: #B7B0A6;
+    --ink-dimmer: #746E67;
+    --clay-1: #E8896B;
+    --clay-2: #F0A57E;
+    --serif: Georgia, "Times New Roman", Times, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ background: var(--bg); }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  ::selection{ background: var(--clay-1); color: #0A0A0C; }
+
+  a{ color: inherit; text-decoration: none; }
+
+  img, svg{ display:block; max-width:100%; }
+
+  /* ---------- grain + ambient glow ---------- */
+
+  .grain{
+    position: fixed;
+    inset: -10%;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
+    animation: grain-drift 9s steps(8) infinite;
+  }
+  @keyframes grain-drift{
+    0%{ transform: translate(0,0); }
+    20%{ transform: translate(-2%,2%); }
+    40%{ transform: translate(2%,-1%); }
+    60%{ transform: translate(-1%,-2%); }
+    80%{ transform: translate(1%,3%); }
+    100%{ transform: translate(0,0); }
+  }
+
+  .ambient{
+    position: fixed;
+    top: -20vh;
+    left: 50%;
+    width: 140vw;
+    height: 90vh;
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, rgba(232,137,107,0.14), rgba(232,137,107,0) 70%);
+    filter: blur(10px);
+    z-index: 0;
+    pointer-events: none;
+    animation: ambient-drift 26s ease-in-out infinite;
+  }
+  @keyframes ambient-drift{
+    0%, 100%{ opacity: 0.75; transform: translateX(-52%) translateY(0); }
+    50%{ opacity: 1; transform: translateX(-48%) translateY(3vh); }
+  }
+
+  /* ---------- layout shell ---------- */
+
+  main, header, footer{ position: relative; z-index: 1; }
+
+  .wrap{
+    max-width: 1320px;
+    margin: 0 auto;
+    padding-left: clamp(20px, 5vw, 64px);
+    padding-right: clamp(20px, 5vw, 64px);
+  }
+
+  /* ---------- topbar ---------- */
+
+  .topbar{
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: clamp(16px, 2.4vw, 26px) clamp(20px, 5vw, 64px);
+    background: rgba(10,10,12,0.72);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid var(--hair);
+  }
+
+  .wordmark{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    letter-spacing: 0.01em;
+  }
+  .wordmark .mark{ width: 20px; height: 20px; flex: none; }
+  .wordmark b{ font-weight: 400; }
+  .wordmark .dot{ color: var(--clay-1); }
+
+  nav.primary{
+    display: flex;
+    gap: clamp(18px, 3vw, 40px);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  nav.primary a{
+    position: relative;
+    color: var(--ink-dim);
+    padding-bottom: 3px;
+    transition: color 0.25s ease;
+  }
+  nav.primary a::after{
+    content: "";
+    position: absolute;
+    left: 0; right: 100%;
+    bottom: 0;
+    height: 1px;
+    background: var(--clay-2);
+    transition: right 0.3s ease;
+  }
+  nav.primary a:hover{ color: var(--ink); }
+  nav.primary a:hover::after{ right: 0; }
+
+  /* ---------- hero ---------- */
+
+  .hero{
+    padding-top: clamp(64px, 11vw, 128px);
+    padding-bottom: clamp(40px, 6vw, 72px);
+  }
+
+  .eyebrow{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dimmer);
+    margin-bottom: clamp(22px, 4vw, 34px);
+  }
+  .eyebrow .line{
+    width: 40px;
+    height: 1px;
+    background: var(--clay-1);
+  }
+
+  h1.headline{
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2.6rem, 8.4vw, 7.6rem);
+    line-height: 0.96;
+    letter-spacing: -0.015em;
+    margin: 0 0 clamp(28px, 4vw, 44px);
+    max-width: 15ch;
+  }
+  h1.headline em{
+    font-style: italic;
+    background: linear-gradient(100deg, var(--clay-1), var(--clay-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero-foot{
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(30px, 6vw, 90px);
+    align-items: flex-end;
+    padding-top: clamp(18px, 3vw, 28px);
+    border-top: 1px solid var(--hair);
+  }
+
+  .hero-copy{
+    max-width: 42ch;
+    font-size: clamp(0.98rem, 1.4vw, 1.1rem);
+    line-height: 1.65;
+    color: var(--ink-dim);
+  }
+
+  .hero-copy strong{ color: var(--ink); font-weight: 500; }
+
+  .scroll-cue{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    white-space: nowrap;
+    padding-bottom: 4px;
+  }
+  .scroll-cue svg{ width: 13px; height: 13px; animation: bob 2.2s ease-in-out infinite; }
+  @keyframes bob{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(4px); }
+  }
+
+  /* ---------- marquee ---------- */
+
+  .marquee-band{
+    margin-top: clamp(48px, 8vw, 84px);
+    border-top: 1px solid var(--hair);
+    border-bottom: 1px solid var(--hair);
+    overflow: hidden;
+    padding: clamp(18px, 3vw, 26px) 0;
+  }
+  .marquee-track{
+    display: flex;
+    width: max-content;
+    gap: 0;
+    animation: marquee 34s linear infinite;
+  }
+  .marquee-track span{
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1rem, 2vw, 1.35rem);
+    color: var(--ink-dimmer);
+    padding: 0 clamp(20px, 3vw, 36px);
+    white-space: nowrap;
+  }
+  .marquee-track span::after{
+    content: "◆";
+    font-family: var(--sans);
+    font-style: normal;
+    font-size: 0.5rem;
+    color: var(--clay-1);
+    margin-left: clamp(20px, 3vw, 36px);
+  }
+  @keyframes marquee{
+    from{ transform: translateX(0); }
+    to{ transform: translateX(-50%); }
+  }
+
+  /* ---------- section framing ---------- */
+
+  section{ padding-top: clamp(72px, 11vw, 140px); }
+
+  .section-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: clamp(30px, 5vw, 52px);
+    flex-wrap: wrap;
+  }
+  .section-head .kicker{
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dimmer);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-head .kicker .line{ width: 40px; height: 1px; background: var(--clay-1); }
+  .section-head h2{
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2rem, 4.2vw, 3.4rem);
+    letter-spacing: -0.01em;
+    margin: 10px 0 0;
+  }
+  .section-head .count{
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--ink-dimmer);
+    font-size: 0.95rem;
+  }
+
+  /* ---------- work grid ---------- */
+
+  .work-grid{
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-areas:
+      "a a a a a a a a b b b b"
+      "c c c c d d d d b b b b"
+      "e e e e e e f f f f f f";
+    gap: 1px;
+    background: var(--hair);
+    border: 1px solid var(--hair);
+  }
+
+  .tile{
+    position: relative;
+    overflow: hidden;
+    min-height: 230px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(18px, 2.2vw, 28px);
+    isolation: isolate;
+  }
+  .tile[data-area="a"]{ grid-area: a; min-height: 460px; }
+  .tile[data-area="b"]{ grid-area: b; min-height: 460px; }
+  .tile[data-area="c"]{ grid-area: c; }
+  .tile[data-area="d"]{ grid-area: d; }
+  .tile[data-area="e"]{ grid-area: e; }
+  .tile[data-area="f"]{ grid-area: f; }
+
+  .tile .field{
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transition: transform 0.7s cubic-bezier(.2,.7,.2,1);
+    background-size: 160% 160%;
+    animation: field-drift 18s ease-in-out infinite;
+  }
+  .tile:hover .field{ transform: scale(1.05); }
+
+  @keyframes field-drift{
+    0%,100%{ background-position: 20% 30%; }
+    50%{ background-position: 80% 70%; }
+  }
+
+  .tile[data-area="a"] .field{ background-image: radial-gradient(120% 120% at 15% 10%, #4a2a24 0%, #2c1712 42%, #140b09 100%); }
+  .tile[data-area="b"] .field{ background-image: linear-gradient(155deg, #3a2f4d 0%, #201a2e 55%, #100c17 100%); }
+  .tile[data-area="c"] .field{ background-image: radial-gradient(140% 140% at 80% 90%, #5a3a26 0%, #2a1c12 55%, #130d08 100%); }
+  .tile[data-area="d"] .field{ background-image: linear-gradient(160deg, #2c3b34 0%, #17211d 60%, #0d1210 100%); }
+  .tile[data-area="e"] .field{ background-image: radial-gradient(130% 130% at 20% 80%, #4d2f2a 0%, #24140f 55%, #110a08 100%); }
+  .tile[data-area="f"] .field{ background-image: linear-gradient(150deg, #333147 0%, #1a1826 55%, #0e0d15 100%); }
+
+  .tile .veil{
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(10,10,12,0) 40%, rgba(10,10,12,0.65) 100%);
+  }
+
+  .tile-index{
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 0.85rem;
+    color: rgba(244,239,232,0.6);
+  }
+
+  .tile-meta{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  .tile-name{
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.25rem, 2vw, 1.9rem);
+    line-height: 1.08;
+    max-width: 20ch;
+  }
+  .tile-tags{
+    text-align: right;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    line-height: 1.6;
+    white-space: nowrap;
+  }
+  .tile-tags .yr{ color: var(--clay-2); }
+
+  /* ---------- ledger ---------- */
+
+  .ledger-intro{
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(30px, 6vw, 80px);
+    margin-bottom: clamp(40px, 6vw, 64px);
+  }
+  .ledger-intro p{
+    font-size: clamp(1.1rem, 1.9vw, 1.5rem);
+    line-height: 1.5;
+    color: var(--ink-dim);
+    font-family: var(--serif);
+    max-width: 30ch;
+  }
+  .ledger-intro p strong{ color: var(--ink); font-weight: 400; font-style: italic; }
+
+  .ledger{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 clamp(30px, 5vw, 72px);
+    border-top: 1px solid var(--hair-strong);
+  }
+  .ledger-col{ display: contents; }
+  .ledger-item{
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    padding: clamp(20px, 2.6vw, 28px) 0;
+    border-bottom: 1px solid var(--hair);
+  }
+  .ledger-item .num{
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--clay-1);
+    font-size: 0.95rem;
+    flex: none;
+    width: 2.4ch;
+  }
+  .ledger-item .body h3{
+    margin: 0 0 6px;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    letter-spacing: -0.005em;
+  }
+  .ledger-item .body p{
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.55;
+    color: var(--ink-dimmer);
+    max-width: 34ch;
+  }
+
+  /* ---------- manifesto ---------- */
+
+  .manifesto{
+    padding-top: clamp(90px, 13vw, 160px);
+    padding-bottom: clamp(90px, 13vw, 160px);
+    text-align: center;
+    border-top: 1px solid var(--hair);
+    border-bottom: 1px solid var(--hair);
+    margin-top: clamp(80px, 12vw, 140px);
+    position: relative;
+  }
+  .manifesto blockquote{
+    margin: 0 auto;
+    max-width: 20ch;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2rem, 5.6vw, 4.4rem);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+  }
+  .manifesto blockquote em{
+    font-style: italic;
+    background: linear-gradient(100deg, var(--clay-1), var(--clay-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .manifesto cite{
+    display: block;
+    margin-top: clamp(22px, 3vw, 32px);
+    font-style: normal;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dimmer);
+  }
+
+  /* ---------- footer / contact ---------- */
+
+  footer.contact{
+    padding-top: clamp(80px, 12vw, 140px);
+    padding-bottom: clamp(40px, 6vw, 64px);
+  }
+
+  .contact-lead{
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+    max-width: 16ch;
+    margin: 0 0 clamp(28px, 4vw, 40px);
+    color: var(--ink-dim);
+  }
+
+  a.big-email{
+    display: inline-block;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2.2rem, 7vw, 5.4rem);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    background: linear-gradient(100deg, var(--ink) 0%, var(--ink) 60%, var(--clay-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    border-bottom: 1px solid var(--hair-strong);
+    padding-bottom: 0.14em;
+    transition: opacity 0.3s ease;
+    word-break: break-all;
+  }
+  a.big-email:hover{ opacity: 0.8; }
+
+  .contact-grid{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: clamp(28px, 6vw, 90px);
+    margin-top: clamp(60px, 9vw, 96px);
+    padding-top: clamp(28px, 4vw, 40px);
+    border-top: 1px solid var(--hair);
+  }
+  .contact-col h4{
+    margin: 0 0 14px;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-dimmer);
+    font-weight: 400;
+  }
+  .contact-col p, .contact-col a{
+    display: block;
+    font-size: 0.92rem;
+    color: var(--ink-dim);
+    line-height: 1.9;
+  }
+  .contact-col a:hover{ color: var(--clay-2); }
+
+  .foot-base{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-top: clamp(60px, 8vw, 90px);
+    padding-top: 22px;
+    border-top: 1px solid var(--hair);
+    font-size: 0.74rem;
+    color: var(--ink-dimmer);
+    letter-spacing: 0.04em;
+    flex-wrap: wrap;
+  }
+  .foot-base a{ color: var(--ink-dimmer); }
+  .foot-base a:hover{ color: var(--ink); }
+
+  /* ---------- responsive ---------- */
+
+  @media (max-width: 900px){
+    .ledger-intro{ grid-template-columns: 1fr; }
+    .ledger{ grid-template-columns: 1fr; }
+    .contact-grid{ grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 700px){
+    nav.primary{ gap: 14px; }
+    .work-grid{
+      grid-template-areas:
+        "a a a a a a a a a a a a"
+        "b b b b b b b b b b b b"
+        "c c c c c c c c c c c c"
+        "d d d d d d d d d d d d"
+        "e e e e e e e e e e e e"
+        "f f f f f f f f f f f f";
+    }
+    .tile[data-area="a"], .tile[data-area="b"]{ min-height: 320px; }
+    .tile{ min-height: 260px; }
+    .contact-grid{ grid-template-columns: 1fr; }
+    .hero-foot{ flex-direction: column; align-items: flex-start; gap: 22px; }
+  }
+
+  @media (max-width: 460px){
+    .topbar{ padding-left: 18px; padding-right: 18px; }
+    .wrap{ padding-left: 18px; padding-right: 18px; }
+    nav.primary{ font-size: 0.68rem; gap: 12px; }
+    h1.headline{ font-size: clamp(2.2rem, 11vw, 3rem); }
+  }
+
+  /* ---------- reduced motion ---------- */
+
+  @media (prefers-reduced-motion: reduce){
+    .grain, .ambient, .marquee-track, .scroll-cue svg, .tile .field{
+      animation: none !important;
+    }
+    .tile .field{ background-position: 50% 50%; }
+    *{ transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body id="top">
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="ambient" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="wordmark">
+      <svg class="mark" viewBox="0 0 20 20" aria-hidden="true">
+        <defs>
+          <linearGradient id="markGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#E8896B" />
+            <stop offset="1" stop-color="#F0A57E" />
+          </linearGradient>
+        </defs>
+        <polygon points="10,0 20,10 10,20 0,10" fill="url(#markGrad)" opacity="0.92" />
+        <polygon points="10,4 16,10 10,16 4,10" fill="#0A0A0C" opacity="0.85" />
+      </svg>
+      <b>Obsidian<span class="dot">.</span></b>
+    </div>
+    <nav class="primary">
+      <a href="#work">Work</a>
+      <a href="#studio">Studio</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="hero">
+        <p class="eyebrow"><span class="line"></span> Obsidian Studio — Est. 2016, Copenhagen &amp; New York</p>
+
+        <h1 class="headline">Design with<br>the weight of <em>conviction</em>.</h1>
+
+        <div class="hero-foot">
+          <p class="hero-copy">
+            We are an independent studio working across identity, editorial, and spatial
+            design for clients who mistake haste for progress. <strong>Sixteen people.
+            No account managers.</strong> Every project is led by the person who designed it.
+          </p>
+          <a class="scroll-cue" href="#work">
+            Selected work
+            <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M6 1v9M2 6l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </section>
+    </div>
+
+    <div class="marquee-band" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Meridian Atlas</span><span>Kinfolk Press</span><span>Hearth &amp; Co.</span><span>The Ferro Building</span><span>Novena</span><span>Salt &amp; Cedar</span><span>North Stair</span><span>Vessel Goods</span>
+        <span>Meridian Atlas</span><span>Kinfolk Press</span><span>Hearth &amp; Co.</span><span>The Ferro Building</span><span>Novena</span><span>Salt &amp; Cedar</span><span>North Stair</span><span>Vessel Goods</span>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <section id="work">
+        <div class="section-head">
+          <div>
+            <p class="kicker"><span class="line"></span> Selected work</p>
+            <h2>A partial record.</h2>
+          </div>
+          <span class="count">( 06 of 71 )</span>
+        </div>
+
+        <div class="work-grid">
+          <article class="tile" data-area="a">
+            <div class="field"></div>
+            <div class="veil"></div>
+            <span class="tile-index">01</span>
+            <div class="tile-meta">
+              <h3 class="tile-name">Meridian Atlas</h3>
+              <div class="tile-tags">Identity, Wayfinding<br><span class="yr">2025</span></div>
+            </div>
+          </article>
+
+          <article class="tile" data-area="b">
+            <div class="field"></div>
+            <div class="veil"></div>
+            <span class="tile-index">02</span>
+            <div class="tile-meta">
+              <h3 class="tile-name">Kinfolk Press, Reissue</h3>
+              <div class="tile-tags">Editorial<br><span class="yr">2024</span></div>
+            </div>
+          </article>
+
+          <article class="tile" data-area="c">
+            <div class="field"></div>
+            <div class="veil"></div>
+            <span class="tile-index">03</span>
+            <div class="tile-meta">
+              <h3 class="tile-name">Hearth &amp; Co.</h3>
+              <div class="tile-tags">Brand System<br><span class="yr">2025</span></div>
+            </div>
+          </article>
+
+          <article class="tile" data-area="d">
+            <div class="field"></div>
+            <div class="veil"></div>
+            <span class="tile-index">04</span>
+            <div class="tile-meta">
+              <h3 class="tile-name">The Ferro Building</h3>
+              <div class="tile-tags">Signage, Environmental<br><span class="yr">2023</span></div>
+            </div>
+          </article>
+
+          <article class="tile" data-area="e">
+            <div class="field"></div>
+            <div class="veil"></div>
+            <span class="tile-index">05</span>
+            <div class="tile-meta">
+              <h3 class="tile-name">Novena</h3>
+              <div class="tile-tags">Packaging<br><span class="yr">2024</span></div>
+            </div>
+          </article>
+
+          <article class="tile" data-area="f">
+            <div class="field"></div>
+            <div class="veil"></div>
+            <span class="tile-index">06</span>
+            <div class="tile-meta">
+              <h3 class="tile-name">Salt &amp; Cedar</h3>
+              <div class="tile-tags">Identity, Digital<br><span class="yr">2026</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="studio">
+        <div class="section-head">
+          <div>
+            <p class="kicker"><span class="line"></span> Capabilities</p>
+            <h2>What we do, precisely.</h2>
+          </div>
+          <span class="count">( 08 disciplines )</span>
+        </div>
+
+        <div class="ledger-intro">
+          <p>We turn down more work than we take. Not out of scarcity — out of a belief that
+            <strong>a studio should only be as large as its taste can supervise</strong>.</p>
+          <p>Every engagement runs the same way: strategy first, craft always, and a founder
+            in the room until the last file is delivered.</p>
+        </div>
+
+        <div class="ledger">
+          <div class="ledger-item">
+            <span class="num">01</span>
+            <div class="body">
+              <h3>Brand Strategy</h3>
+              <p>Positioning, naming, and the argument your identity is built to make.</p>
+            </div>
+          </div>
+          <div class="ledger-item">
+            <span class="num">05</span>
+            <div class="body">
+              <h3>Editorial Design</h3>
+              <p>Books, journals, and reports designed to be kept, not scrolled past.</p>
+            </div>
+          </div>
+          <div class="ledger-item">
+            <span class="num">02</span>
+            <div class="body">
+              <h3>Visual Identity</h3>
+              <p>Marks, systems, and the guidelines that keep them from drifting.</p>
+            </div>
+          </div>
+          <div class="ledger-item">
+            <span class="num">06</span>
+            <div class="body">
+              <h3>Signage &amp; Environments</h3>
+              <p>Wayfinding and spatial graphics for buildings people remember.</p>
+            </div>
+          </div>
+          <div class="ledger-item">
+            <span class="num">03</span>
+            <div class="body">
+              <h3>Packaging</h3>
+              <p>Structure and surface for objects that have to earn the shelf.</p>
+            </div>
+          </div>
+          <div class="ledger-item">
+            <span class="num">07</span>
+            <div class="body">
+              <h3>Digital Product</h3>
+              <p>Interfaces with an editorial hand — considered type, real hierarchy.</p>
+            </div>
+          </div>
+          <div class="ledger-item">
+            <span class="num">04</span>
+            <div class="body">
+              <h3>Art Direction</h3>
+              <p>Photography and film direction for campaigns and lookbooks.</p>
+            </div>
+          </div>
+          <div class="ledger-item">
+            <span class="num">08</span>
+            <div class="body">
+              <h3>Advisory</h3>
+              <p>Quarterly counsel for teams building their own design function.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="manifesto">
+      <div class="wrap">
+        <blockquote>Good taste is not a mood board. It's a <em>discipline</em>.</blockquote>
+        <cite>— Studio Manifesto, Line 1 of 40</cite>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <footer class="contact" id="contact">
+        <p class="contact-lead">Let's build something with weight.</p>
+        <a class="big-email" href="mailto:studio@obsidian-atelier.com">studio@obsidian&#8209;atelier.com</a>
+
+        <div class="contact-grid">
+          <div class="contact-col">
+            <h4>Studios</h4>
+            <p>Copenhagen, Nyhavn 14</p>
+            <p>New York, Walker St.</p>
+          </div>
+          <div class="contact-col">
+            <h4>Elsewhere</h4>
+            <a href="#top">Instagram</a>
+            <a href="#top">Are.na</a>
+            <a href="#top">LinkedIn</a>
+          </div>
+          <div class="contact-col">
+            <h4>Direct</h4>
+            <a href="mailto:studio@obsidian-atelier.com">General enquiries</a>
+            <a href="mailto:press@obsidian-atelier.com">Press</a>
+            <a href="mailto:careers@obsidian-atelier.com">Careers</a>
+          </div>
+        </div>
+
+        <div class="foot-base">
+          <span>&copy; 2026 Obsidian Studio. All rights reserved.</span>
+          <a href="#top">Back to top ↑</a>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+</body>
+</html>

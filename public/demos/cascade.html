@@ -1,0 +1,679 @@
+<!-- Cascade — bento feature grid demo -->
+<style>
+  :root{
+    --bg: #08080A;
+    --bg-2: #0B0B0E;
+    --panel: #101012;
+    --panel-2: #131316;
+    --hairline: rgba(255,255,255,0.08);
+    --hairline-strong: rgba(255,255,255,0.16);
+    --text: #F3F1EC;
+    --text-dim: #9C9AA3;
+    --text-faint: #6B6A73;
+    --amber: #F5B14C;
+    --amber-light: #F6C674;
+    --amber-dim: #B98A3E;
+    --amber-glow: rgba(245, 177, 76, 0.38);
+    --amber-glow-soft: rgba(245, 177, 76, 0.16);
+    --shadow-soft: 0 30px 70px -28px rgba(0,0,0,0.75);
+    --shadow-cell: 0 1px 0 rgba(255,255,255,0.05) inset, 0 22px 48px -26px rgba(0,0,0,0.7);
+    --radius-lg: 26px;
+    --radius-md: 16px;
+    --radius-sm: 10px;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  *, *::before, *::after{ box-sizing: border-box; }
+
+  html, body{
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body{
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* ---------- atmosphere ---------- */
+  .bg-decor{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(820px 480px at 20% -6%, rgba(245,177,76,0.10), transparent 60%),
+      radial-gradient(760px 520px at 88% 10%, rgba(245,177,76,0.06), transparent 62%),
+      radial-gradient(900px 640px at 50% 108%, rgba(245,177,76,0.045), transparent 65%),
+      var(--bg);
+  }
+  .bg-decor::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.5;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(760px 520px at 50% 0%, #000 0%, transparent 72%);
+    mask-image: radial-gradient(760px 520px at 50% 0%, #000 0%, transparent 72%);
+  }
+
+  .page{
+    position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(40px, 6vw, 76px) clamp(20px, 5vw, 48px) clamp(56px, 7vw, 88px);
+  }
+
+  /* ---------- header ---------- */
+  .intro{
+    max-width: 640px;
+    margin: 0 auto clamp(32px, 5vw, 52px);
+    text-align: center;
+  }
+
+  .eyebrow{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+    color: var(--amber-light);
+    background: rgba(245,177,76,0.08);
+    border: 1px solid rgba(245,177,76,0.22);
+    padding: 6px 13px 6px 10px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+
+  .eyebrow-dot{
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 0 rgba(245,177,76,0.5);
+    animation: eyebrowPulse 2.2s ease-out infinite;
+  }
+
+  @keyframes eyebrowPulse{
+    0%   { box-shadow: 0 0 0 0 rgba(245,177,76,0.55); }
+    70%  { box-shadow: 0 0 0 7px rgba(245,177,76,0); }
+    100% { box-shadow: 0 0 0 0 rgba(245,177,76,0); }
+  }
+
+  .intro h1{
+    margin: 0 0 14px;
+    font-size: clamp(30px, 4.4vw, 46px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    font-weight: 680;
+    color: var(--text);
+  }
+
+  .intro p{
+    margin: 0;
+    font-size: clamp(14.5px, 1.7vw, 17px);
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+
+  /* ---------- bento grid ---------- */
+  .bento{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-areas:
+      "hero hero chart chart"
+      "hero hero team  team"
+      "flags status deploy deploy";
+    gap: clamp(14px, 1.6vw, 18px);
+  }
+
+  @media (max-width: 900px){
+    .bento{
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-areas:
+        "hero hero"
+        "chart chart"
+        "team team"
+        "flags status"
+        "deploy deploy";
+    }
+  }
+
+  @media (max-width: 560px){
+    .bento{
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "hero"
+        "chart"
+        "team"
+        "flags"
+        "status"
+        "deploy";
+    }
+  }
+
+  .cell{
+    position: relative;
+    background:
+      linear-gradient(165deg, rgba(255,255,255,0.035), rgba(255,255,255,0) 40%),
+      var(--panel);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-cell);
+    padding: clamp(20px, 2.4vw, 27px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .cell:hover{
+    border-color: var(--hairline-strong);
+    transform: translateY(-2px);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 30px 60px -26px rgba(0,0,0,0.8);
+  }
+
+  .cell-hero  { grid-area: hero;  min-height: 300px; }
+  .cell-chart { grid-area: chart; min-height: 210px; }
+  .cell-team  { grid-area: team;  min-height: 176px; }
+  .cell-flags { grid-area: flags; min-height: 200px; }
+  .cell-status{ grid-area: status;min-height: 200px; }
+  .cell-deploy{ grid-area: deploy;min-height: 176px; }
+
+  .cell-icon{
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(245,177,76,0.09);
+    border: 1px solid rgba(245,177,76,0.2);
+    color: var(--amber-light);
+    margin-bottom: 16px;
+    flex-shrink: 0;
+  }
+  .cell-icon svg{ width: 18px; height: 18px; }
+
+  .cell h2{
+    margin: 0 0 6px;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    font-weight: 640;
+    color: var(--text);
+  }
+
+  .cell p{
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--text-dim);
+    max-width: 46ch;
+  }
+
+  .cell-body{
+    position: relative;
+    z-index: 1;
+  }
+
+  .cell-spacer{ flex: 1 1 auto; }
+
+  /* ---------- hero cell ---------- */
+  .cell-hero{ justify-content: space-between; }
+  .cell-hero .cell-icon{ background: rgba(245,177,76,0.12); }
+
+  .hero-tag{
+    position: absolute;
+    top: 22px;
+    right: 24px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+    border: 1px solid var(--hairline);
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .hero-illustration{
+    margin-top: 18px;
+    width: 100%;
+  }
+  .hero-illustration svg{ width: 100%; height: auto; display: block; }
+
+  .flow-line{
+    fill: none;
+    stroke: url(#flowGrad);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 7 7;
+    animation: flowDash 1.6s linear infinite;
+  }
+  .flow-line.line-b{ animation-delay: -0.55s; }
+
+  @keyframes flowDash{
+    to{ stroke-dashoffset: -28; }
+  }
+
+  .node-ring{
+    fill: none;
+    stroke: var(--amber);
+    stroke-width: 1.4;
+    opacity: 0.35;
+    animation: nodeRing 2.6s ease-in-out infinite;
+  }
+  .node-a .node-ring{ animation-delay: 0s; }
+  .node-b .node-ring{ animation-delay: 0.5s; }
+  .node-c .node-ring{ animation-delay: 1s; }
+
+  @keyframes nodeRing{
+    0%, 100%{ opacity: 0.22; r: 15; }
+    45%{ opacity: 0.65; r: 18; }
+  }
+
+  .node-dot{ fill: #17130A; stroke: var(--amber-light); stroke-width: 1.6; }
+  .node-label{
+    font-family: var(--mono);
+    font-size: 9.5px;
+    fill: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ---------- analytics / chart cell ---------- */
+  .live-tag{
+    position: absolute;
+    top: 22px;
+    right: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.09em;
+    color: var(--amber-light);
+  }
+  .live-dot{
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--amber);
+    animation: eyebrowPulse 2.2s ease-out infinite;
+  }
+
+  .chart-illustration{
+    margin-top: 14px;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 84px;
+  }
+  .chart-illustration svg{ width: 100%; height: 100%; display: block; }
+
+  .bar{
+    transform-box: fill-box;
+    transform-origin: bottom;
+    animation: barPulse 2.8s ease-in-out infinite;
+  }
+  .bar:nth-child(1){ animation-delay: -2.4s; }
+  .bar:nth-child(2){ animation-delay: -1.9s; }
+  .bar:nth-child(3){ animation-delay: -1.4s; }
+  .bar:nth-child(4){ animation-delay: -0.9s; }
+  .bar:nth-child(5){ animation-delay: -0.4s; }
+  .bar:nth-child(6){ animation-delay: 0s; }
+
+  @keyframes barPulse{
+    0%, 100%{ transform: scaleY(0.78); }
+    50%{ transform: scaleY(1); }
+  }
+
+  /* ---------- team cell ---------- */
+  .avatar-row{
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+  }
+  .avatar{
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2.5px solid var(--panel);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: #1B1408;
+    margin-left: -12px;
+    flex-shrink: 0;
+  }
+  .avatar:first-child{ margin-left: 0; }
+  .avatar-1{ background: linear-gradient(150deg, #F6C674, #E39A3B); }
+  .avatar-2{ background: linear-gradient(150deg, #E7E4DC, #A9A6A0); }
+  .avatar-3{ background: linear-gradient(150deg, #F6C674, #C77F2A); }
+  .avatar-4{ background: linear-gradient(150deg, #CFCBC2, #8E8B85); }
+  .avatar-more{
+    background: rgba(245,177,76,0.12);
+    border: 2.5px solid var(--panel);
+    color: var(--amber-light);
+    box-shadow: inset 0 0 0 1px rgba(245,177,76,0.25);
+  }
+
+  /* ---------- flags cell ---------- */
+  .flag-file{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--text-faint);
+    margin-bottom: 14px;
+  }
+  .flag-file svg{ width: 11px; height: 11px; flex-shrink: 0; }
+
+  .toggle-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 0;
+    border-top: 1px solid var(--hairline);
+  }
+  .toggle-row:first-of-type{ border-top: none; padding-top: 0; }
+  .toggle-row span{
+    font-size: 12.5px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+  }
+
+  .switch{
+    width: 32px;
+    height: 18px;
+    border-radius: 999px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .switch::after{
+    content: "";
+    position: absolute;
+    top: 2.5px;
+    left: 2.5px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #0D0D0F;
+    transition: left 0.2s ease;
+  }
+  .switch.on{
+    background: linear-gradient(120deg, var(--amber-light), var(--amber-dim));
+    box-shadow: 0 0 12px rgba(245,177,76,0.35);
+  }
+  .switch.on::after{ left: 16.5px; background: #1B1408; }
+  .switch.off{ background: rgba(255,255,255,0.08); }
+
+  /* ---------- status cell ---------- */
+  .status-stat{
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: clamp(30px, 3vw, 36px);
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .status-stat span{ color: var(--amber-light); }
+  .status-caption{
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+    margin-top: 4px;
+  }
+  .status-pill{
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(245,177,76,0.07);
+    border: 1px solid rgba(245,177,76,0.18);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .status-dot{
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 0 rgba(245,177,76,0.5);
+    animation: eyebrowPulse 2.4s ease-out infinite;
+    flex-shrink: 0;
+  }
+
+  /* ---------- deploy cell ---------- */
+  .cell-deploy{
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(18px, 2.4vw, 28px);
+  }
+  .deploy-copy{ flex: 1 1 220px; min-width: 0; }
+  .deploy-grid{
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 5px;
+    flex: 0 0 auto;
+    width: min(220px, 42%);
+  }
+  .deploy-dot{
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.06);
+  }
+  .deploy-dot.on{
+    background: var(--amber);
+    box-shadow: 0 0 9px rgba(245,177,76,0.45);
+  }
+
+  @media (max-width: 560px){
+    .cell-deploy{ flex-direction: column; align-items: flex-start; }
+    .deploy-grid{ width: 100%; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+</style>
+
+<div class="bg-decor" aria-hidden="true"></div>
+
+<div class="page">
+
+  <header class="intro">
+    <span class="eyebrow"><span class="eyebrow-dot"></span>CASCADE</span>
+    <h1>Everything, at a glance</h1>
+    <p>One brief in, a finished product out — Cascade assembles the system, the states, and the small moments that make it feel real.</p>
+  </header>
+
+  <main class="bento">
+
+    <!-- HERO -->
+    <section class="cell cell-hero">
+      <span class="hero-tag">SYSTEM.BUILD</span>
+      <div>
+        <div class="cell-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3 3 8l9 5 9-5-9-5Z"/>
+            <path d="M3 13l9 5 9-5"/>
+          </svg>
+        </div>
+        <div class="cell-body">
+          <h2>One prompt. A finished product.</h2>
+          <p>Cascade turns a single brief into a cohesive system — pages, states, and micro-interactions that already feel shipped.</p>
+        </div>
+      </div>
+      <div class="hero-illustration">
+        <svg viewBox="0 0 340 170" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="flowGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#F5B14C" stop-opacity="0.15"/>
+              <stop offset="50%" stop-color="#F6C674" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#F5B14C" stop-opacity="0.15"/>
+            </linearGradient>
+          </defs>
+          <path class="flow-line line-a" d="M40 128 L155 82"/>
+          <path class="flow-line line-b" d="M155 82 L280 34"/>
+
+          <g class="node-a">
+            <circle class="node-ring" cx="40" cy="128" r="15"/>
+            <circle class="node-dot" cx="40" cy="128" r="7"/>
+          </g>
+          <text class="node-label" x="24" y="152" text-anchor="middle">PROMPT</text>
+
+          <g class="node-b">
+            <circle class="node-ring" cx="155" cy="82" r="15"/>
+            <circle class="node-dot" cx="155" cy="82" r="7"/>
+          </g>
+          <text class="node-label" x="155" y="106" text-anchor="middle">ASSEMBLE</text>
+
+          <g class="node-c">
+            <circle class="node-ring" cx="280" cy="34" r="15"/>
+            <circle class="node-dot" cx="280" cy="34" r="7"/>
+          </g>
+          <text class="node-label" x="291" y="18" text-anchor="middle">SHIP</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ANALYTICS / CHART -->
+    <section class="cell cell-chart">
+      <span class="live-tag"><span class="live-dot"></span>LIVE</span>
+      <div class="cell-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 17l4-5 4 3 5-7 5 4"/>
+        </svg>
+      </div>
+      <div class="cell-body">
+        <h2>Metrics that flow</h2>
+        <p>Every interaction streams into a live dashboard, updating the instant it happens.</p>
+      </div>
+      <div class="chart-illustration">
+        <svg viewBox="0 0 220 90" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F6C674"/>
+              <stop offset="100%" stop-color="#C77F2A"/>
+            </linearGradient>
+          </defs>
+          <rect class="bar" x="8"   y="34" width="20" height="56" rx="4" fill="url(#barGrad)" opacity="0.55"/>
+          <rect class="bar" x="42"  y="18" width="20" height="72" rx="4" fill="url(#barGrad)" opacity="0.65"/>
+          <rect class="bar" x="76"  y="46" width="20" height="44" rx="4" fill="url(#barGrad)" opacity="0.55"/>
+          <rect class="bar" x="110" y="8"  width="20" height="82" rx="4" fill="url(#barGrad)"/>
+          <rect class="bar" x="144" y="28" width="20" height="62" rx="4" fill="url(#barGrad)" opacity="0.7"/>
+          <rect class="bar" x="178" y="0"  width="20" height="90" rx="4" fill="url(#barGrad)"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- TEAM -->
+    <section class="cell cell-team">
+      <div class="cell-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="8" r="3.2"/>
+          <path d="M2.8 19c.7-3.4 3.2-5.2 6.2-5.2s5.5 1.8 6.2 5.2"/>
+          <circle cx="17.5" cy="7.5" r="2.6"/>
+          <path d="M15.5 13.4c2.5.2 4.4 1.9 5 4.9"/>
+        </svg>
+      </div>
+      <div class="cell-body">
+        <h2>Built for teams</h2>
+        <p>Share a workspace, review changes side-by-side, and ship together.</p>
+      </div>
+      <div class="cell-spacer"></div>
+      <div class="avatar-row">
+        <div class="avatar avatar-1">MK</div>
+        <div class="avatar avatar-2">RJ</div>
+        <div class="avatar avatar-3">SN</div>
+        <div class="avatar avatar-4">TL</div>
+        <div class="avatar avatar-more">+8</div>
+      </div>
+    </section>
+
+    <!-- FLAGS -->
+    <section class="cell cell-flags">
+      <div class="cell-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 3v18"/>
+          <path d="M5 4h11l-2.5 3.5L16 11H5"/>
+        </svg>
+      </div>
+      <div class="cell-body">
+        <h2>Ship behind flags</h2>
+        <p>Roll out changes gradually, baked into every build.</p>
+      </div>
+      <div class="cell-spacer"></div>
+      <div class="flag-file">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2h9l5 5v15H6Z"/>
+          <path d="M15 2v5h5"/>
+        </svg>
+        flags.config
+      </div>
+      <div class="toggle-row"><span>checkout_v2</span><div class="switch on"></div></div>
+      <div class="toggle-row"><span>dark_mode</span><div class="switch on"></div></div>
+      <div class="toggle-row"><span>beta_search</span><div class="switch off"></div></div>
+    </section>
+
+    <!-- STATUS -->
+    <section class="cell cell-status">
+      <div class="cell-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 12h4l2.5-7L13 19l2.5-7H22"/>
+        </svg>
+      </div>
+      <div class="cell-body">
+        <h2>Always in sync</h2>
+        <p>Reliability baked into the build, not bolted on after.</p>
+      </div>
+      <div class="status-stat">99.98<span>%</span></div>
+      <div class="status-caption">UPTIME · LAST 90 DAYS</div>
+      <div class="cell-spacer"></div>
+      <div class="status-pill"><span class="status-dot"></span>All systems live</div>
+    </section>
+
+    <!-- DEPLOY -->
+    <section class="cell cell-deploy">
+      <div class="deploy-copy">
+        <div class="cell-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M3 12h18M12 3c2.6 2.5 4 5.7 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.7-4-9s1.4-6.5 4-9Z"/>
+          </svg>
+        </div>
+        <div class="cell-body">
+          <h2>Deploy anywhere</h2>
+          <p>One click reaches every region — 12 live, instantly.</p>
+        </div>
+      </div>
+      <div class="deploy-grid" aria-hidden="true">
+        <div class="deploy-dot"></div><div class="deploy-dot on"></div><div class="deploy-dot"></div><div class="deploy-dot"></div><div class="deploy-dot on"></div><div class="deploy-dot"></div><div class="deploy-dot"></div><div class="deploy-dot on"></div><div class="deploy-dot"></div>
+        <div class="deploy-dot on"></div><div class="deploy-dot"></div><div class="deploy-dot"></div><div class="deploy-dot on"></div><div class="deploy-dot"></div><div class="deploy-dot"></div><div class="deploy-dot"></div><div class="deploy-dot"></div><div class="deploy-dot on"></div>
+        <div class="deploy-dot"></div><div class="deploy-dot"></div><div class="deploy-dot on"></div><div class="deploy-dot"></div><div class="deploy-dot"></div><div class="deploy-dot on"></div><div class="deploy-dot"></div><div class="deploy-dot"></div><div class="deploy-dot"></div>
+      </div>
+    </section>
+
+  </main>
+
+</div>

@@ -1,143 +1,247 @@
-# Casual Pool
+# Lucen
 
-> Australia's casual workforce, on tap.
+> Premium website layers — with the prompt and assets included.
 
-A two-sided staffing marketplace built with **Expo + React Native + TypeScript**. Businesses post shifts, workers apply, both sides pay a flat **$4.99** platform fee per hired shift.
+Lucen is a digital product library. Creators browse premium website/UI
+"layers" (templates, 3D scenes, backgrounds, sections), preview them live, and
+unlock the full build prompts + bundled assets via subscription. Free items are
+the bait, premium items are gated, and new drops land every Friday.
 
-This repo contains the **mobile app scaffold** (iOS-first, also runs on Android and web).
-
----
-
-## What's in the box
-
-- **Expo Router** app with grouped routes: `(auth)`, `(onboarding)`, `(tabs)`
-- **Design system** — warm neutral background, premium dark feature panels, teal accents
-- Auth: role selection, sign-up, sign-in, forgot password (mocked)
-- Worker onboarding (4 steps): basics, skills & rate, availability, documents
-- Business onboarding (3 steps): company details, ABN verification, payment setup
-- Marketplace: shift list + worker directory + map placeholder
-- Shift detail, applicants, shortlist, hire
-- Post-a-shift flow (ABN-gated)
-- Messaging (thread list + chat)
-- Calendar with weekly view
-- Dashboards (worker + business, week/month/year)
-- Profile screens for both roles
-- Zustand state stores with seeded mock data
-- Mock ABN verifier and permissions gate
-- Database schema in `docs/SCHEMA.md`
-- Admin panel plan in `docs/ADMIN_PANEL.md`
-- Investor-quality product brief in `docs/PRODUCT_BRIEF.md`
-- Replit Agent 4 continuation prompt in `docs/REPLIT_AGENT_PROMPT.md`
+Built with **Next.js 15 (App Router) · TypeScript · Tailwind CSS v4 · Supabase
+· Stripe**, deployed on **Vercel**.
 
 ---
 
-## Quick start
+## Seed mode vs. live mode
 
-### 1. Install dependencies
+Lucen runs with **zero backend** out of the box. With no environment variables
+set, it serves six built-in demo items (`src/lib/data/seed.ts`) so the entire
+site — grid, filters, item detail, free-item prompt copy, pricing, legal — is
+browsable and demoable. Add the Supabase and Stripe env blocks to flip it to
+**live mode**: real auth, database, storage, and subscription billing. The
+capability flags live in [`src/lib/env.ts`](src/lib/env.ts); every server route
+degrades gracefully when a capability is absent.
+
+---
+
+## Design system
+
+- Dark base (`#050608` family, never pure black) with a single luminous accent:
+  **signal cyan `#4FE3E8`**.
+- **Glassmorphism** is the core language — dark-tinted frosted panels, hairline
+  accent borders, inner top highlight, soft deep shadows. Something luminous
+  always lives behind the blur.
+- Display face: **Clash Display**. Body: **Inter**. Labels/metadata:
+  **JetBrains Mono**.
+- Pill-shaped controls, film grain overlay site-wide, `prefers-reduced-motion`
+  respected globally.
+- Homepage signature: **kinetic type** — a giant ghosted wordmark behind the
+  hero glass that responds to pointer and scroll.
+- All design tokens live in [`src/lib/tokens.ts`](src/lib/tokens.ts), mirrored
+  into the Tailwind v4 theme in [`src/app/globals.css`](src/app/globals.css).
+  No scattered hex values.
+
+---
+
+## Getting started
 
 ```bash
 npm install
+cp .env.example .env.local   # optional — leave empty to run in seed mode
+npm run dev                  # http://localhost:3000
 ```
 
-> Node 18+ recommended. The project pins Expo SDK 51.
-
-### 2. Run the app
+Scripts:
 
 ```bash
-npm run ios       # iOS simulator
-npm run android   # Android emulator
-npm run web       # browser
-npm run start     # Expo Dev Tools
+npm run build       # production build
+npm run start       # run the production build
+npm run typecheck   # tsc --noEmit
+npm run lint        # eslint
 ```
 
-### 3. Demo login
+---
 
-From the landing screen, tap **Sign in**, then either:
-- **Sign in as Worker (demo)** — preloads Amelia Chen's profile
-- **Sign in as Business (demo)** — preloads Bowery & Vine's profile
+## The gating architecture (read this)
 
-You can also tap **Create an account** to walk through the real onboarding flow.
+The paid payload — `prompt_text` and asset bundle paths — lives **only** in the
+`item_secrets` table, which has RLS enabled and **no client-read policy**. The
+anon and authenticated roles therefore get zero rows; the service-role key
+(server-side) is the only way in. Access flows exclusively through two server
+routes, both `POST`-only:
+
+| Route | Check | Returns |
+| --- | --- | --- |
+| `POST /api/items/[slug]/prompt` | free tier, or active subscription | the prompt text |
+| `POST /api/items/[slug]/download` | same | a short-lived signed URL for the asset zip |
+
+The single gate is [`src/lib/gate.ts`](src/lib/gate.ts):
+
+- item not found / unpublished → **404**
+- free item → allowed (no auth needed)
+- premium + not signed in → **401**
+- premium + signed in, no entitlement → **403**
+- premium + active entitlement → allowed
+
+For a **locked** premium item the detail page renders a *blurred filler* block
+(`LockedTeaser`) — never the real prompt. The secret never appears in any client
+bundle, RSC payload, or public response. (Verified: on `/l/obsidian-studio` the
+real prompt heading appears **0** times in the served HTML, and the API returns
+401/403 without leaking `promptText`.)
+
+Access rules by subscription status: `active`/`trialing` → full; `past_due` →
+grace access with a banner; `canceled` → access until `current_period_end`.
+
+---
+
+## Supabase setup (live mode)
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. Run the migrations (SQL editor, or `supabase db push` with the CLI):
+   - [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql) —
+     tables, enums, RLS policies, the new-user → profile trigger.
+   - [`supabase/migrations/0002_storage.sql`](supabase/migrations/0002_storage.sql)
+     — `preview-media` (public) + `asset-bundles` (private) buckets.
+   - [`supabase/seed.sql`](supabase/seed.sql) — optional: the six demo items +
+     starter secrets. (The full 800+ word reference prompts ship in
+     `src/lib/data/seed-secrets.ts`; paste/expand them in `/admin` or edit the
+     seed as you like.)
+3. Enable auth providers: **Email** (magic link) and **Google** (add OAuth
+   credentials; set the redirect URL to `<site>/auth/callback`).
+4. Copy the values into `.env.local`:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...            # server only — never expose
+ADMIN_EMAILS=you@example.com             # gates /admin
+```
+
+RLS sanity check: as an anon/authenticated user, `select * from item_secrets`
+returns **no rows**. Only the service role reads it.
+
+---
+
+## Stripe setup (live mode)
+
+1. Create two recurring **Prices** in test mode — Pro Monthly and Pro Annual
+   (annual = two months free). Quick path:
+   ```bash
+   ./scripts/stripe-test.sh prices
+   ```
+2. Put the keys/IDs in `.env.local`:
+   ```
+   STRIPE_SECRET_KEY=sk_test_...
+   STRIPE_PRICE_MONTHLY=price_...
+   STRIPE_PRICE_ANNUAL=price_...
+   STRIPE_WEBHOOK_SECRET=whsec_...        # from `stripe listen`, step 3
+   ```
+3. Forward webhooks locally and grab the signing secret:
+   ```bash
+   ./scripts/stripe-test.sh listen        # copy the whsec_... it prints
+   ```
+4. Full end-to-end test: open `/pricing`, sign in, pick a plan, pay with test
+   card `4242 4242 4242 4242`. The `checkout.session.completed` webhook upserts
+   your `subscriptions` row (attributed via `subscription.metadata.userId`), and
+   `/account` shows **Active**. Fire raw events with
+   `./scripts/stripe-test.sh fire`.
+
+The webhook ([`/api/webhooks/stripe`](src/app/api/webhooks/stripe/route.ts))
+verifies signatures, is idempotent (every event recomputes the row from the
+current Stripe subscription), and handles `checkout.session.completed`,
+`customer.subscription.{created,updated,deleted}`, and `invoice.payment_failed`.
+The **Customer Portal** (cancel/upgrade/card) opens from `/account` via
+`POST /api/portal`.
+
+---
+
+## Deploy to Vercel
+
+1. Push this repo and import it at [vercel.com](https://vercel.com).
+2. Add every variable from `.env.example` in **Project → Settings → Environment
+   Variables**. Set `NEXT_PUBLIC_SITE_URL` to your production URL.
+3. In the Stripe dashboard, add a **webhook endpoint** at
+   `<site>/api/webhooks/stripe` for the four event types above; put its signing
+   secret in `STRIPE_WEBHOOK_SECRET`.
+4. In Supabase auth settings, add `<site>/auth/callback` to the allowed redirect
+   URLs and set the site URL.
+5. Deploy. `middleware.ts` refreshes the auth session and guards `/account` and
+   `/admin`.
 
 ---
 
 ## Project structure
 
 ```
-casual-pool/
-├── app/                       # Expo Router pages
-│   ├── _layout.tsx
-│   ├── index.tsx              # Landing
-│   ├── dashboard.tsx          # Worker/business dashboard
-│   ├── (auth)/                # Sign-up, sign-in, forgot password, role
-│   ├── (onboarding)/          # Worker + business onboarding flows
-│   ├── (tabs)/                # Home, Discover, Calendar, Messages, Profile
-│   ├── shift/                 # [id].tsx, new.tsx
-│   ├── worker/                # [id].tsx
-│   └── messages/              # [threadId].tsx
-├── components/
-│   └── ui/                    # Design-system primitives (Button, Card, Input, …)
-├── constants/
-│   └── theme.ts               # Colors, type, spacing, radius, shadows
-├── hooks/                     # (add custom hooks here)
-├── lib/
-│   ├── abn.ts                 # ABN format + mock verifier
-│   ├── format.ts              # Date / currency helpers
-│   ├── mockData.ts            # Seeded workers, businesses, shifts, messages
-│   └── permissions.ts         # ABN/payment gate
-├── stores/                    # Zustand stores: auth, profile, shifts, messaging
-├── types/                     # Domain types matching the Postgres schema
-├── docs/
-│   ├── SCHEMA.md
-│   ├── ADMIN_PANEL.md
-│   ├── PRODUCT_BRIEF.md
-│   └── REPLIT_AGENT_PROMPT.md
-├── app.json
-├── babel.config.js
-├── tsconfig.json
-└── package.json
+src/
+  app/
+    layout.tsx                     # fonts, backdrop, film grain, modal slot, metadata
+    globals.css                    # Tailwind v4 theme + glass utilities
+    page.tsx                       # library home (hero, filters, grid, drop strip)
+    l/[slug]/page.tsx              # item detail (full route) + OG image
+    @modal/(.)l/[slug]/page.tsx    # item detail as an intercepting-route modal
+    pricing/ account/ login/       # pricing, account, auth
+    admin/                         # item + secret CRUD, uploads, publish (ADMIN_EMAILS)
+    terms/ privacy/ licence/       # legal
+    api/
+      items/[slug]/prompt          # gated prompt route
+      items/[slug]/download        # gated signed-URL route
+      checkout/ portal/            # Stripe session creation
+      webhooks/stripe/             # signed, idempotent subscription sync
+    auth/callback/                 # OAuth / magic-link code exchange
+    robots.ts sitemap.ts           # SEO
+  components/                      # glass primitives, library, item, pricing, legal, account
+  lib/
+    tokens.ts env.ts               # tokens + capability flags
+    auth.ts gate.ts stripe.ts      # session, entitlement, gate, billing
+    supabase/                      # browser / server / service-role clients
+    data/                          # items, secrets (server-only), seed, downloads
+  middleware.ts                    # session refresh + route guards
+supabase/migrations/               # schema, RLS, storage
+scripts/stripe-test.sh             # Stripe CLI harness
 ```
 
 ---
 
-## Environment
+## Quality floor
 
-Copy `.env.example` to `.env` and fill in when you wire backends. Nothing in this scaffold requires real keys — the mock data and mock ABN verifier work out of the box.
+- Production build green; `/` and `/l/[slug]` render server-side; First Load JS
+  ~103–118 kB. Videos are lazy (IntersectionObserver) with poster fallback;
+  seed items draw a solid-colour placeholder marked "preview" for replacement.
+- Every interactive element ships hover / focus-visible / active / disabled /
+  loading states; focus rings are always visible and accent-cyan.
+- Designed empty states (no results, no downloads) and on-brand 404.
+- Dynamic OG image per item + site-wide; robots + sitemap.
+- `prefers-reduced-motion` respected globally (kinetic type, previews,
+  transitions all stand down).
+- Security: a non-subscriber's premium prompt/download request returns 401/403
+  and the secret never reaches the client.
 
-```
-EXPO_PUBLIC_SUPABASE_URL=
-EXPO_PUBLIC_SUPABASE_ANON_KEY=
-EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=
-STRIPE_SECRET_KEY=
-ABR_GUID=
-EXPO_PUBLIC_GOOGLE_MAPS_KEY=
-```
+### Kickoff decisions (locked)
 
----
+| Decision  | Choice                            |
+| --------- | --------------------------------- |
+| Brand     | **Lucen** (lucen.ai)              |
+| Accent    | **Signal cyan `#4FE3E8`**         |
+| Display   | **Clash Display**                 |
+| Signature | **Kinetic type** behind the hero  |
 
-## Design language
+### Build blocks
 
-- **Background** `#F4F1EC` warm neutral
-- **Surfaces** white cards with 16–20px radius and very soft shadow
-- **Feature panels** charcoal `#171717` with cream text
-- **Accent** teal/green `#0F7B6C`
-- **Type** system stack (SF Pro on iOS, Roboto on Android); 700 for headings, 500 for emphasis
-- **Spacing** 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 56
-
-Do not restyle the design system without intent — it's tuned to feel like a premium native iOS product, not a generic React Native template.
-
----
-
-## Continuing development
-
-Open `docs/REPLIT_AGENT_PROMPT.md` and paste it into a fresh Replit Agent 4 session after importing the repo. The prompt explains:
-
-- What's already built
-- What to build next (Supabase, Stripe, live ABN, push, map, reviews, admin)
-- Rules to follow (design lock, type everything, server-enforce gates)
-- A clear "definition of done" for the next pass
+- [x] **Block 1** — Scaffold, tokens, glass primitives, kickoff picks.
+- [x] **Block 2** — Supabase schema + RLS + auth flow.
+- [x] **Block 3** — Library home (grid, filters, cards) + seed items.
+- [x] **Block 4** — Item detail + gating API routes.
+- [x] **Block 5** — Stripe checkout + webhooks + account.
+- [x] **Block 6** — Admin + storage uploads.
+- [x] **Block 7** — Pricing + legal + polish.
 
 ---
 
-## License
+## What still needs your hands
 
-Proprietary — © 2026 Casual Pool. All rights reserved.
+- Register **lucen.ai** and rename the GitHub repo to match.
+- Provide real Supabase + Stripe credentials (seed mode until then).
+- Replace the solid-colour placeholder previews with real looping video +
+  posters via `/admin`.
+- Configure the Google OAuth consent screen.

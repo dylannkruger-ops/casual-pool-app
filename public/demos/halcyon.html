@@ -1,0 +1,658 @@
+<!-- Halcyon — pricing section demo -->
+<style>
+  :root{
+    --bg: #07080B;
+    --bg-2: #0A0C11;
+    --panel: #0D1017;
+    --panel-2: #10141C;
+    --hairline: rgba(255,255,255,0.08);
+    --hairline-strong: rgba(255,255,255,0.14);
+    --text: #F3F5F7;
+    --text-dim: #A6ADBB;
+    --text-faint: #6C7484;
+    --accent-a: #2DD4BF;
+    --accent-b: #38BDF8;
+    --accent-grad: linear-gradient(120deg, var(--accent-a), var(--accent-b));
+    --accent-soft: rgba(56, 189, 248, 0.14);
+    --shadow-soft: 0 30px 80px -30px rgba(0,0,0,0.7);
+    --radius-lg: 22px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  *, *::before, *::after{ box-sizing: border-box; }
+
+  html, body{
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 72px 24px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* ---------- background atmosphere ---------- */
+  .bg-decor{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(680px 420px at 18% 8%, rgba(45,212,191,0.10), transparent 60%),
+      radial-gradient(720px 460px at 84% 14%, rgba(56,189,248,0.09), transparent 60%),
+      radial-gradient(900px 600px at 50% 100%, rgba(45,212,191,0.05), transparent 65%),
+      var(--bg);
+  }
+  .bg-decor::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.4;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(700px 500px at 50% 0%, #000 0%, transparent 75%);
+    mask-image: radial-gradient(700px 500px at 50% 0%, #000 0%, transparent 75%);
+  }
+
+  .pricing{
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1180px;
+  }
+
+  /* ---------- header ---------- */
+  .header{
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 44px;
+  }
+
+  .eyebrow{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-a);
+    background: rgba(45, 212, 191, 0.08);
+    border: 1px solid rgba(45, 212, 191, 0.22);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+  .eyebrow .dot{
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-grad);
+    box-shadow: 0 0 8px rgba(56,189,248,0.8);
+  }
+
+  .header h1{
+    margin: 0 0 14px;
+    font-size: clamp(30px, 4.4vw, 44px);
+    line-height: 1.12;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    background: linear-gradient(180deg, #FFFFFF 0%, #C8CEDA 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .header .subhead{
+    margin: 0 auto;
+    max-width: 480px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+
+  /* ---------- toggle ---------- */
+  .toggle-row{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 32px;
+    font-size: 14px;
+    color: var(--text-faint);
+    user-select: none;
+  }
+  .toggle-row .label{
+    transition: color 0.25s ease;
+  }
+  .toggle-row .label.active{
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .save-badge{
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #0B1613;
+    background: var(--accent-grad);
+    padding: 3px 8px;
+    border-radius: 999px;
+    vertical-align: middle;
+  }
+
+  .toggle{
+    position: relative;
+    width: 52px;
+    height: 30px;
+    border-radius: 999px;
+    border: 1px solid var(--hairline-strong);
+    background: var(--panel-2);
+    cursor: pointer;
+    padding: 0;
+    flex: 0 0 auto;
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+  .toggle:focus-visible{
+    outline: 2px solid var(--accent-b);
+    outline-offset: 2px;
+  }
+  .toggle .thumb{
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #fff, #dfe4ea);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+  }
+  .pricing.is-annual .toggle{
+    background: rgba(45, 212, 191, 0.18);
+    border-color: rgba(45, 212, 191, 0.4);
+  }
+  .pricing.is-annual .toggle .thumb{
+    transform: translateX(22px);
+    background: var(--accent-grad);
+  }
+
+  /* ---------- cards ---------- */
+  .cards{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    align-items: stretch;
+    margin-top: 52px;
+  }
+
+  .card{
+    position: relative;
+    background: linear-gradient(180deg, var(--panel) 0%, var(--bg-2) 100%);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+    padding: 32px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+  .card:hover{
+    transform: translateY(-3px);
+    border-color: var(--hairline-strong);
+  }
+
+  .card-pro{
+    background:
+      linear-gradient(180deg, rgba(45,212,191,0.06) 0%, var(--bg-2) 55%),
+      linear-gradient(180deg, var(--panel) 0%, var(--bg-2) 100%);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    transform: scale(1.055);
+    z-index: 2;
+    padding-top: 36px;
+  }
+  .card-pro:hover{
+    transform: scale(1.055) translateY(-3px);
+  }
+
+  @keyframes haloPulse{
+    0%, 100% {
+      box-shadow: var(--shadow-soft), 0 0 0 1px rgba(56,189,248,0.10), 0 0 46px -8px rgba(45,212,191,0.35);
+    }
+    50% {
+      box-shadow: var(--shadow-soft), 0 0 0 1px rgba(56,189,248,0.20), 0 0 70px -6px rgba(56,189,248,0.55);
+    }
+  }
+  .card-pro{
+    animation: haloPulse 4.5s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .card-pro{ animation: none; box-shadow: var(--shadow-soft), 0 0 46px -10px rgba(45,212,191,0.4); }
+  }
+
+  .badge-popular{
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: #06201C;
+    background: var(--accent-grad);
+    padding: 7px 16px;
+    border-radius: 999px;
+    box-shadow: 0 8px 20px -6px rgba(45,212,191,0.55);
+    white-space: nowrap;
+  }
+
+  .tier-name{
+    font-size: 15px;
+    font-weight: 650;
+    color: var(--text);
+    margin: 0 0 6px;
+  }
+  .tier-desc{
+    font-size: 13.5px;
+    color: var(--text-faint);
+    margin: 0 0 22px;
+    line-height: 1.5;
+    min-height: 40px;
+  }
+
+  .price-row{
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .price-amount{
+    font-size: 42px;
+    font-weight: 680;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--text);
+  }
+  .card-pro .price-amount{
+    background: var(--accent-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .price-period{
+    font-size: 14px;
+    color: var(--text-faint);
+    padding-bottom: 6px;
+  }
+  .price-sub{
+    font-size: 12.5px;
+    color: var(--text-faint);
+    margin-bottom: 24px;
+    height: 16px;
+  }
+  .price-annual{ display: none; }
+  .pricing.is-annual .price-monthly{ display: none; }
+  .pricing.is-annual .price-annual{ display: inline; }
+  .pricing.is-annual .price-sub .price-sub-monthly{ display: none; }
+  .price-sub .price-sub-annual{ display: none; }
+  .pricing.is-annual .price-sub .price-sub-annual{ display: inline; }
+
+  .cta{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 18px;
+    border-radius: 999px;
+    font-size: 14.5px;
+    font-weight: 620;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid var(--hairline-strong);
+    background: var(--panel-2);
+    color: var(--text);
+    transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+    margin-bottom: 26px;
+  }
+  .cta:hover{
+    border-color: rgba(255,255,255,0.3);
+    transform: translateY(-1px);
+  }
+  .cta-primary{
+    background: var(--accent-grad);
+    border-color: transparent;
+    color: #06201C;
+    box-shadow: 0 10px 26px -10px rgba(45,212,191,0.55);
+  }
+  .cta-primary:hover{
+    filter: brightness(1.06);
+  }
+
+  .features{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-top: 1px solid var(--hairline);
+    padding-top: 22px;
+  }
+  .features li{
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.45;
+  }
+  .features svg{
+    flex: 0 0 auto;
+    width: 17px;
+    height: 17px;
+    margin-top: 1px;
+  }
+  .features .check-circle{
+    fill: rgba(45, 212, 191, 0.14);
+  }
+  .features .check-mark{
+    stroke: var(--accent-a);
+  }
+  .card-pro .features .check-circle{
+    fill: rgba(56, 189, 248, 0.18);
+  }
+  .card-pro .features .check-mark{
+    stroke: var(--accent-b);
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq{
+    max-width: 740px;
+    margin: 76px auto 0;
+  }
+  .faq h2{
+    text-align: center;
+    font-size: 22px;
+    font-weight: 640;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin: 0 0 24px;
+  }
+  .faq-item{
+    background: var(--panel);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .faq-item summary{
+    list-style: none;
+    cursor: pointer;
+    padding: 17px 22px;
+    font-size: 14.5px;
+    font-weight: 560;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .faq-item summary::-webkit-details-marker{ display: none; }
+  .faq-item .chev{
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    color: var(--text-faint);
+    transition: transform 0.25s ease;
+  }
+  .faq-item[open] .chev{
+    transform: rotate(180deg);
+    color: var(--accent-a);
+  }
+  .faq-item .faq-body{
+    padding: 0 22px 18px;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--text-dim);
+  }
+  .faq-item[open] summary{
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .foot-note{
+    text-align: center;
+    margin-top: 40px;
+    font-size: 12.5px;
+    color: var(--text-faint);
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 900px){
+    .cards{
+      grid-template-columns: 1fr;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .card-pro{
+      order: -1;
+      transform: scale(1);
+    }
+    .card-pro:hover{
+      transform: translateY(-3px);
+    }
+  }
+
+  @media (max-width: 480px){
+    body{ padding: 48px 16px; }
+    .header h1{ font-size: 28px; }
+    .card{ padding: 26px 20px 22px; }
+    .price-amount{ font-size: 36px; }
+    .faq-item summary{ padding: 14px 16px; font-size: 14px; }
+    .faq-item .faq-body{ padding: 0 16px 16px; }
+  }
+</style>
+
+<div class="bg-decor" aria-hidden="true"></div>
+
+<section class="pricing" id="pricing">
+  <div class="header">
+    <span class="eyebrow"><span class="dot"></span> Halcyon &middot; Pricing block</span>
+    <h1>Simple, honest pricing</h1>
+    <p class="subhead">No hidden fees, no surprise invoices, no calls with sales. Pick a plan, cancel any time you like.</p>
+
+    <div class="toggle-row">
+      <span class="label active" id="label-monthly">Monthly</span>
+      <button class="toggle" id="billingToggle" type="button" role="switch" aria-checked="false" aria-label="Toggle annual billing">
+        <span class="thumb"></span>
+      </button>
+      <span class="label" id="label-annual">Annual <span class="save-badge">2 months free</span></span>
+    </div>
+  </div>
+
+  <div class="cards">
+    <!-- Starter -->
+    <div class="card">
+      <p class="tier-name">Starter</p>
+      <p class="tier-desc">For solo builders shipping their first project.</p>
+      <div class="price-row">
+        <span class="price-amount"><span class="price-monthly">$19</span><span class="price-annual">$16</span></span>
+        <span class="price-period">/ month</span>
+      </div>
+      <p class="price-sub">
+        <span class="price-sub-monthly">Billed monthly</span>
+        <span class="price-sub-annual">$190 billed annually</span>
+      </p>
+      <a class="cta" href="#">Start free trial</a>
+      <ul class="features">
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          1 production project
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Up to 5,000 monthly visitors
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Community support
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Basic analytics
+        </li>
+      </ul>
+    </div>
+
+    <!-- Pro (highlighted) -->
+    <div class="card card-pro">
+      <span class="badge-popular">Most popular</span>
+      <p class="tier-name">Pro</p>
+      <p class="tier-desc">For growing teams that need room to move fast.</p>
+      <div class="price-row">
+        <span class="price-amount"><span class="price-monthly">$49</span><span class="price-annual">$41</span></span>
+        <span class="price-period">/ month</span>
+      </div>
+      <p class="price-sub">
+        <span class="price-sub-monthly">Billed monthly</span>
+        <span class="price-sub-annual">$490 billed annually</span>
+      </p>
+      <a class="cta cta-primary" href="#">Start free trial</a>
+      <ul class="features">
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Unlimited projects
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Up to 100,000 monthly visitors
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Priority email &amp; chat support
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Advanced analytics &amp; exports
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Custom domains
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Team roles &amp; permissions
+        </li>
+      </ul>
+    </div>
+
+    <!-- Team -->
+    <div class="card">
+      <p class="tier-name">Team</p>
+      <p class="tier-desc">For organizations running Halcyon at scale.</p>
+      <div class="price-row">
+        <span class="price-amount"><span class="price-monthly">$99</span><span class="price-annual">$83</span></span>
+        <span class="price-period">/ month</span>
+      </div>
+      <p class="price-sub">
+        <span class="price-sub-monthly">Billed monthly</span>
+        <span class="price-sub-annual">$990 billed annually</span>
+      </p>
+      <a class="cta" href="#">Talk to sales</a>
+      <ul class="features">
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Everything in Pro
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Unlimited visitors
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Dedicated onboarding
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          SSO &amp; audit logs
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><circle class="check-circle" cx="10" cy="10" r="10"/><path class="check-mark" d="M6 10.2l2.4 2.4L14 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          99.9% uptime SLA
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="faq">
+    <h2>Questions, answered</h2>
+
+    <details class="faq-item" open>
+      <summary>
+        Can I switch plans later?
+        <svg class="chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </summary>
+      <div class="faq-body">Yes. Upgrade, downgrade, or cancel at any time from your billing settings — changes are prorated automatically, and there's no penalty for switching either direction.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary>
+        What happens after my free trial?
+        <svg class="chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </summary>
+      <div class="faq-body">Every plan starts with a 14-day trial, no card required. If you don't upgrade, your workspace simply reverts to a read-only state — nothing is deleted and no charge ever happens without your confirmation.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary>
+        Do you offer refunds?
+        <svg class="chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </summary>
+      <div class="faq-body">If Halcyon isn't a fit, email us within 30 days of any charge and we'll refund it in full — no forms, no retention flow, no questions asked.</div>
+    </details>
+  </div>
+
+  <p class="foot-note">Prices in USD. Taxes calculated at checkout. Cancel any time.</p>
+</section>
+
+<script>
+  (function(){
+    var section = document.getElementById('pricing');
+    var toggle = document.getElementById('billingToggle');
+    var labelMonthly = document.getElementById('label-monthly');
+    var labelAnnual = document.getElementById('label-annual');
+
+    function setAnnual(isAnnual){
+      section.classList.toggle('is-annual', isAnnual);
+      toggle.setAttribute('aria-checked', String(isAnnual));
+      labelMonthly.classList.toggle('active', !isAnnual);
+      labelAnnual.classList.toggle('active', isAnnual);
+    }
+
+    toggle.addEventListener('click', function(){
+      setAnnual(!section.classList.contains('is-annual'));
+    });
+
+    labelMonthly.addEventListener('click', function(){ setAnnual(false); });
+    labelAnnual.addEventListener('click', function(){ setAnnual(true); });
+  })();
+</script>
